@@ -129,4 +129,8 @@ export class LoginService {
       })
     }))
   }
+
+  resetPassword(email:string){
+    return this.afa.auth.sendPasswordResetEmail(email)
+  }
 }
