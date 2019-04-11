@@ -19,6 +19,7 @@ import { LoginService } from './services/login.service';
 import { CategoriaService } from './services/categoria.service';
 import { produtoService } from './services/produto.service';
 import { RelatorioService } from './services/relatorio.service';
+import { UsuarioService } from './services/usuario.service';
 
 //Componets
 import { AppComponent } from './app.component';
@@ -27,7 +28,6 @@ import { AdminComponent } from './admin/admin.component';
 import { LoginComponent } from './acesso/login/login.component';
 import { CadastroComponent } from './acesso/cadastro/cadastro.component';
 import { ResetComponent } from './acesso/reset/reset.component';
-
 
 @NgModule({
   declarations: [
@@ -56,6 +56,7 @@ import { ResetComponent } from './acesso/reset/reset.component';
   providers: [
     AuthGuardService,
     LoginService,
+    UsuarioService,
     CategoriaService,
     produtoService,
     RelatorioService
