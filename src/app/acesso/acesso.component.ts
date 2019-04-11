@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { RelatorioService } from '../services/relatorio.service';
-import { Produto } from '../models/produto.model';
 
 @Component({
   selector: 'app-acesso',
@@ -9,11 +7,7 @@ import { Produto } from '../models/produto.model';
 })
 export class AcessoComponent implements OnInit {
 
-  produtos:Produto[]
-
-  constructor(
-    private relatorio:RelatorioService
-  ) { }
+  constructor() { }
 
   ngOnInit() {
   }

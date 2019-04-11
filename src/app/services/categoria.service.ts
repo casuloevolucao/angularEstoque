@@ -16,7 +16,7 @@ export class CategoriaService {
     private afs:AngularFireStorage
   ) { }
 
-  //pegar as categorias
+  //pegar as categorias ativas
   getData(usuario:Usuario){
     return this.af.collection("categoria").doc(usuario.uid).collection("user", ref=> ref.where("esta_ativo", "==", true).orderBy("dtCadastro"))
     .snapshotChanges().pipe(
@@ -30,8 +30,9 @@ export class CategoriaService {
       })
     )
   }
-
-  getDataDesable(usuario:Usuario){
+  
+  //pegar as categorias desativadas
+  getDataDisable(usuario:Usuario){
     return this.af.collection("categoria").doc(usuario.uid).collection("user", ref => ref.where("esta_ativo", "==", false).orderBy("dtCadastro"))
     .snapshotChanges().pipe(
       //pegar id dos documentos
@@ -79,17 +80,24 @@ export class CategoriaService {
     })
   }
 
-  //deletear categoria
+  //deletar categoria
   deleteCategoria(usuario:Usuario, categoria:Categoria){
     return this.af.collection("categoria").doc(usuario.uid).collection("user").doc(categoria.id).delete().then((rs)=>{
       this.afs.ref(`categoria/${categoria.id}`).delete()
     })
   }
 
-  //desabilitar categoria
+  //desativar categoria
   disableCategoria(usuario:Usuario, categoria:Categoria){
     return this.af.collection("categoria").doc(usuario.uid).collection("user").doc(categoria.id).update({
       esta_ativo:false
+    })
+  }
+
+  //ativar categoria
+  activateCategoria(usuario:Usuario, categoria:Categoria){
+    return this.af.collection("categoria").doc(usuario.uid).collection("user").doc(categoria.id).update({
+      esta_ativo:true
     })
   }
 

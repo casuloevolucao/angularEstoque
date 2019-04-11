@@ -23,17 +23,15 @@ export class LoginService {
 
   //metodo de login
   async login(login:Usuario){
-    return this.afa.auth.signInAndRetrieveDataWithEmailAndPassword(login.email, login.senha).then((user)=>{
+    return this.afa.auth.signInAndRetrieveDataWithEmailAndPassword(login.email, login.senha)
+    .then((user)=>{
       this.af.collection('users').doc(user.user.uid).update({
         online:true
       })
       //pegar token e salvar no localStorage
-      this.afa.auth.currentUser.getIdToken().then((idToken:any)=>{
-        this.IdToken = idToken
-        localStorage.setItem('idToken', idToken)
-        this.router.navigate(['/chat'])
-      })
+      this.saveLocalStorage()
     })
+    
   }
 
   //metodo de login facebook
@@ -47,11 +45,7 @@ export class LoginService {
         online:true
       })
       //pegar token e salvar no localStorage
-      this.afa.auth.currentUser.getIdToken().then((idToken:any)=>{
-        this.IdToken = idToken
-        localStorage.setItem('idToken', idToken)
-        this.router.navigate(['/chat'])
-      })
+      this.saveLocalStorage()
     })
   }
 
@@ -66,11 +60,7 @@ export class LoginService {
         online:true
       })
       //pegar token e salvar no localStorage
-      this.afa.auth.currentUser.getIdToken().then((idToken:any)=>{
-        this.IdToken = idToken
-        localStorage.setItem('idToken', idToken)
-        this.router.navigate(['/chat'])
-      })
+      this.saveLocalStorage()
     })
   }
 
@@ -80,7 +70,7 @@ export class LoginService {
       this.IdToken = localStorage.getItem('idToken')
     }
     if( this.IdToken == undefined){
-        this.router.navigate(['/'])
+      this.router.navigate(['/'])
     }
     return this.IdToken !== undefined
   }
@@ -130,7 +120,33 @@ export class LoginService {
     }))
   }
 
+  //pegar token e salvar no localStorage
+  saveLocalStorage(){
+    this.afa.auth.currentUser.getIdToken().then((idToken:any)=>{
+      this.IdToken = idToken
+      localStorage.setItem('idToken', idToken)
+      this.router.navigate(['/admin'])
+    })
+  }
+
+  //resetar senha
   resetPassword(email:string){
     return this.afa.auth.sendPasswordResetEmail(email)
+  }
+
+  //tradução dos erros de login
+  erroTratament(erro:firebase.FirebaseError):firebase.FirebaseError{
+    if( erro.code == "auth/email-already-in-use" ){
+      erro.message = "O endereço de e-mail já está sendo usado por outra conta."
+    }else if(erro.code == "auth/invalid-email"){
+      erro.message = "O endereço de e-mail está invalido"
+    }else if(erro.code == "auth/wrong-password"){
+      erro.message = "A senha é inválida ou o usuário é inválido."
+    }else if (erro.code == "auth/user-not-found"){
+      erro.message = "Não há registro do usuário. O usuário pode ter sido excluído."
+    }else if (erro.code == "auth/user-disabled"){
+      erro.message = "A conta do usuário foi desativada."
+    }
+    return erro
   }
 }

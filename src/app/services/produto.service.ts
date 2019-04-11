@@ -16,7 +16,7 @@ export class produtoService {
     private afs:AngularFireStorage
   ) { }
 
-  //pegar as produtos
+  //pegar as produtos ativos
   getData(usuario:Usuario){
     return this.af.collection("produto").doc(usuario.uid).collection("user", ref=> ref.where("esta_ativo", "==", true).orderBy("dtCadastro"))
     .snapshotChanges().pipe(
@@ -31,7 +31,8 @@ export class produtoService {
     )
   }
 
-  getDataDesable(usuario:Usuario){
+  //pegar as produtos desativados
+  getDataDisable(usuario:Usuario){
     return this.af.collection("produto").doc(usuario.uid).collection("user", ref => ref.where("esta_ativo", "==", false).orderBy("dtCadastro"))
     .snapshotChanges().pipe(
       //pegar id dos documentos
@@ -50,6 +51,7 @@ export class produtoService {
     return  this.af.collection("produto").doc(usuario.uid).collection("user").add({
       nome: produto.nome,
       descricao: produto.descricao,
+      quantidade: produto.quantidade,
       dtCadastro:new Date(),
       esta_ativo: true
     })
@@ -79,7 +81,7 @@ export class produtoService {
     })
   }
 
-  //deletear produto
+  //deletar produto
   deleteProduto(usuario:Usuario, produto:Produto){
     return this.af.collection("produto").doc(usuario.uid).collection("user").doc(produto.id).delete().then((rs)=>{
       this.afs.ref(`produto/${produto.id}`).delete()
@@ -93,4 +95,10 @@ export class produtoService {
     })
   }
 
+  //ativar produto
+  activateProduto(usuario:Usuario, produto:Produto){
+    return this.af.collection("produto").doc(usuario.uid).collection("user").doc(produto.id).update({
+      esta_ativo:false
+    })
+  }
 }
