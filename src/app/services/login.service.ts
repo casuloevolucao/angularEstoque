@@ -63,6 +63,18 @@ export class LoginService {
     })
   }
 
+  //metodo criar usuario
+  async createUser(create:Usuario){
+    return this.afa.auth.createUserWithEmailAndPassword(create.email, create.senha).then((user)=>{
+     this.af.collection('users').doc(user.user.uid).set({
+       uid: user.user.uid,
+       foto: '',
+       email: create.email,
+       nome:create.nome
+     })
+   })
+  }  
+
   //metodo que verifica autenticação esta ativa
   autenticarLogin():boolean{
     if( this.IdToken ==  undefined && localStorage.getItem('idToken') ){
@@ -76,7 +88,7 @@ export class LoginService {
 
   //metodo logout
   async logout(uid:string){
-    return this.afa.auth.signOut().then((user)=>{
+    return this.afa.auth.signOut().then(()=>{
       this.af.collection('users').doc(uid).update({
         online:false,
         dtLogin:new Date()
@@ -114,6 +126,10 @@ export class LoginService {
       erro.message = "Não há registro do usuário. O usuário pode ter sido excluído."
     }else if (erro.code == "auth/user-disabled"){
       erro.message = "A conta do usuário foi desativada."
+    }else if (erro.code = "auth/user-token-expired"){
+      erro.message = "A credencial do usuário não é mais válida. O usuário deve entrar novamente."
+    }else if (erro.code = "auth/argument-error"){
+      erro.message = "reauthenticateWithPopup falhou: o primeiro argumento authProvider deve ser um provedor de Auth válido."
     }
     return erro
   }
