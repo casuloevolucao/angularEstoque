@@ -18,7 +18,6 @@ import { AuthGuardService } from './services/auth-guard.service';
 import { LoginService } from './services/login.service';
 import { CategoriaService } from './services/categoria.service';
 import { produtoService } from './services/produto.service';
-import { RelatorioService } from './services/relatorio.service';
 import { UsuarioService } from './services/usuario.service';
 
 //Componets
@@ -59,7 +58,6 @@ import { ResetComponent } from './acesso/reset/reset.component';
     UsuarioService,
     CategoriaService,
     produtoService,
-    RelatorioService
   ],
   bootstrap: [AppComponent]
 })
