@@ -23,9 +23,15 @@ import { UsuarioService } from './services/usuario.service';
 //Componets
 import { AppComponent } from './app.component';
 import { AdminComponent } from './admin/admin.component';
-import { LoginComponent } from './/login/login.component';
-import { CadastroComponent } from './cadastro/cadastro.component';
-import { ResetComponent } from './reset/reset.component';
+import { LoginComponent } from './acesso/login/login.component';
+import { CadastroComponent } from './acesso/cadastro/cadastro.component';
+import { ResetComponent } from './acesso/reset/reset.component';
+import { HomeComponent } from './admin/views/home/home.component';
+import { CategoriaComponent } from './admin/views/categoria/categoria.component';
+import { ProdutoComponent } from './admin/views/produto/produto.component';
+import { SidebarComponent } from './admin/sidebar/sidebar.component';
+import { HeaderComponent } from './admin/header/header.component';
+import { FooterComponent } from './admin/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +40,12 @@ import { ResetComponent } from './reset/reset.component';
     LoginComponent,
     CadastroComponent,
     ResetComponent,
+    HomeComponent,
+    CategoriaComponent,
+    ProdutoComponent,
+    SidebarComponent,
+    HeaderComponent,
+    FooterComponent,
     
   ],
   imports: [

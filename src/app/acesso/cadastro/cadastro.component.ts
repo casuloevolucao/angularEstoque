@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { UsuarioService } from '../services/usuario.service';
-import { Usuario } from '../models/usuario.model';
-import { LoginService } from '../services/login.service';
+import { LoginService } from 'src/app/services/login.service';
+import { UsuarioService } from 'src/app/services/usuario.service';
+import { Usuario } from 'src/app/models/usuario.model';
+
 
 @Component({
   selector: 'app-cadastro',
