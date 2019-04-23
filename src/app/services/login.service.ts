@@ -20,6 +20,16 @@ export class LoginService {
     private afs:AngularFireStorage
   ) { }
 
+  //A função getAuth simplesmente retorna a API auth
+  getAuth() { 
+    return this.afa.auth; 
+  }
+
+  //A função envia a solicitação de redefinição de senha para o Firebase
+  resetPasswordInit(email: string) { 
+    return this.afa.auth.sendPasswordResetEmail(email); 
+  }
+
   //metodo de login
   async login(login:Usuario){
     return this.afa.auth.signInAndRetrieveDataWithEmailAndPassword(login.email, login.senha)
