@@ -63,18 +63,6 @@ export class LoginService {
     })
   }
 
-  //metodo criar usuario
-  async createUser(create:Usuario){
-    return this.afa.auth.createUserWithEmailAndPassword(create.email, create.senha).then((user)=>{
-     this.af.collection('users').doc(user.user.uid).set({
-       uid: user.user.uid,
-       foto: '',
-       email: create.email,
-       nome:create.nome
-     })
-   })
-  }  
-
   //metodo que verifica autenticação esta ativa
   autenticarLogin():boolean{
     if( this.IdToken ==  undefined && localStorage.getItem('idToken') ){

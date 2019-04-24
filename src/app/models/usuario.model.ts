@@ -12,4 +12,5 @@ export class Usuario {
     senha:string
     online:boolean
     dtLogin:Date
+    dtCadastro:Date
 }

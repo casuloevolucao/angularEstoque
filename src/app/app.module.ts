@@ -22,21 +22,30 @@ import { UsuarioService } from './services/usuario.service';
 
 //Componets
 import { AppComponent } from './app.component';
-import { AcessoComponent } from './acesso/acesso.component';
 import { AdminComponent } from './admin/admin.component';
 import { LoginComponent } from './acesso/login/login.component';
 import { CadastroComponent } from './acesso/cadastro/cadastro.component';
 import { ResetComponent } from './acesso/reset/reset.component';
+import { HomeComponent } from './admin/views/home/home.component';
+import { CategoriaComponent } from './admin/views/categoria/categoria.component';
+import { ProdutoComponent } from './admin/views/produto/produto.component';
+import { SidebarComponent } from './admin/sidebar/sidebar.component';
+import { HeaderComponent } from './admin/header/header.component';
+import { FooterComponent } from './admin/footer/footer.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AcessoComponent,
     AdminComponent,
     LoginComponent,
     CadastroComponent,
     ResetComponent,
-    
+    HomeComponent,
+    CategoriaComponent,
+    ProdutoComponent,
+    SidebarComponent,
+    HeaderComponent,
+    FooterComponent,
   ],
   imports: [
     BrowserModule,

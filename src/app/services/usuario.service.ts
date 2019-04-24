@@ -17,6 +17,19 @@ export class UsuarioService {
     private afs:AngularFireStorage
   ) { }
 
+  //metodo criar usuario
+  async createUser(create:Usuario){
+    return this.afa.auth.createUserWithEmailAndPassword(create.email, create.senha).then((user)=>{
+     this.af.collection('users').doc(user.user.uid).set({
+       uid: user.user.uid,
+       foto: '',
+       email: create.email,
+       nome: create.nome,
+       dtCadastro: new Date()
+     })
+   })
+  }  
+
   //desativar usuario
   async desativateUser(){
     return this.afa.authState.subscribe((user)=>{
@@ -25,7 +38,7 @@ export class UsuarioService {
   }
 
   //editar usuario
-  editUser(usuarioNovo:Usuario, usuarioAntigo:Usuario){
+  async editUser(usuarioNovo:Usuario, usuarioAntigo:Usuario){
     //validando se existe foto
     if(usuarioNovo.foto){
       //metodo retornara uma promessa personalizada
@@ -96,20 +109,16 @@ export class UsuarioService {
     //metodo retornara uma promessa personalizada
     return new Promise((resolve, reject)=>{
       //verificando usuario logado
-      this.afa.authState.subscribe((rs)=>{
-        //pegando dados do usuário logado
-        this.af.collection("users", ref => ref.where("uid", '==', rs.uid)).valueChanges().subscribe((user:Usuario[])=>{
-          if(user.length > 0){
+      this.afa.authState.subscribe(
+        user=>{
+          //pegando dados do usuário logado
+          this.af.collection("users").doc(user.uid).valueChanges().subscribe((user:Usuario)=>{
             //caso encontrar dados
-            resolve(user[0])
-          }else{
-            //caso der erro ao encontrar dados
-            let erro = new Error()
-            erro.message = "Erro ao trazer usuario"
-            erro.name = "firebase get user autentication"
-            reject(erro)
-          }
-        })    
+            resolve(user)
+        })
+        error=>{
+          reject(error)
+        }    
       })
     })
   } 

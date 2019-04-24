@@ -1,40 +1,61 @@
 <div class="login-box">
   <div class="login-logo">
-    <a href=""><b>Admin</b>LTE</a>
+    <a routerLink="/">Sys<b>Toque</b></a>
   </div>
   <!-- /.login-logo -->
   <div class="login-box-body">
-    <p class="login-box-msg">Sign in to start your session</p>
+    <p class="login-box-msg">Entre para iniciar sua sessão</p>
 
-    <form [formGroup]="">
+    <form [formGroup]="form" (ngSubmit)="submit()">
       <div class="form-group has-feedback">
-        <input type="email" class="form-control" placeholder="Email">
+        <input formControlName="email" type="email" class="form-control" placeholder="Email">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+        <div *ngIf="form.get('email').invalid && (form.get('email').dirty || form.get('email').touched)" class="alert alert-danger">
+        <div *ngIf="form.get('email').hasError('required')">
+          campo é Requerido
+        </div>
+        <div *ngIf="form.get('email').hasError('email')">
+          Email inválido
+        </div>
+      </div>
       </div>
       <div class="form-group has-feedback">
-        <input type="password" class="form-control" placeholder="Password">
+        <input formControlName="senha" type="password" class="form-control" placeholder="Password">
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+        <div *ngIf="form.get('senha').invalid && (form.get('senha').dirty || form.get('senha').touched)" class="alert alert-danger">
+          
+          <div *ngIf="form.get('senha').hasError('required')">
+            campo é Requerido
+          </div>
+          <div *ngIf="form.get('senha').hasError('minlength')">
+            Minimo 6 caracteres
+          </div>
+
+        </div>
+        <div *ngIf="erro" class="alert alert-danger">
+          <p>{{erro}}</p>
+        </div>
       </div>
       <div class="row">
         <div class="col-xs-4">
-          <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+          <button type="submit" class="btn btn-primary btn-block btn-flat" [disabled]="!form.valid">Login</button>
         </div>
         <!-- /.col -->
       </div>
     </form>
 
     <div class="social-auth-links text-center">
-      <p>- OR -</p>
-      <a href="#"   class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i> Sign in using
-        Facebook</a>
-      <a href="#" class="btn btn-block btn-social btn-google btn-flat"><i class="fa fa-google-plus"></i> Sign in using
-        Google+</a>
+      <p>- OU -</p>
+      <button type="button" (click)="loginFacebook()" class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i> Entre usando
+        Facebook</button>
+      <button type="button" (click)="loginGoogle()" class="btn btn-block btn-social btn-google btn-flat"><i class="fa fa-google-plus"></i> Entre usando
+        Google+</button>
     </div>
     <!-- /.social-auth-links -->
-
-    <a href="#">I forgot my password</a><br>
-    <a href="register.html" class="text-center">Register a new membership</a>
+    <a routerLink="/recuperarsenha" class="text-center" style="margin-top: 5vh"> Esqueci a minha senha</a><br>
+    <a routerLink="/cadastro" class="text-center">Registre uma nova associação</a>
 
   </div>
   <!-- /.login-box-body -->
 </div>
+

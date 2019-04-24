@@ -1,3 +1,36 @@
-<p>
-  reset works!
-</p>
+<div class="login-box">
+  <div class="login-logo">
+    <a routerLink="/">Sys<b>Toque</b></a>
+  </div>
+  <!-- /.login-logo -->
+  <div class="login-box-body">
+    <p class="login-box-msg">Recupere sua senha</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-group has-feedback">
+        <input formControlName="email" type="email" class="form-control" placeholder="E-mail">
+        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+        <div *ngIf="form.get('email').invalid && (form.get('email').dirty || form.get('email').touched)" class="alert alert-danger">
+          <div *ngIf="form.get('email').hasError('required')">
+            campo é Requerido
+          </div>
+          <div *ngIf="form.get('email').hasError('email')">
+            Email inválido
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xs-4">
+          <button type="submit" class="btn btn-primary btn-block btn-flat" [disabled]="!form.valid">Enviar</button>
+        </div>
+        <!-- /.col -->
+      </div>
+    </form>
+
+    <a routerLink="/">Eu já tenho uma associação</a><br>
+    <a routerLink="/cadastro" class="text-center">Registre uma nova associação</a>
+
+  </div>
+  <!-- /.login-box-body -->
+</div>

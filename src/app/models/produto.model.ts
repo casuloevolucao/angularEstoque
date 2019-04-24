@@ -1,4 +1,8 @@
 export class Produto {
+    constructor(init?: Partial<Produto>) {
+        Object.assign(this, init);
+    }
+
     id:string
     nome:string
     descricao:string
