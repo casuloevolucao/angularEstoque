@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { LoginService } from 'src/app/services/login.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { Usuario } from 'src/app/models/usuario.model';
+import { compareValidator } from 'src/app/shared/compare-validator.directive';
 
 
 @Component({
@@ -21,8 +22,9 @@ export class CadastroComponent implements OnInit {
   form:FormGroup = new FormGroup({
     "nome": new FormControl("", [Validators.required]),
     "email": new FormControl("", [Validators.required, Validators.email]),
-    "foto": new FormControl("", [Validators.required]),
-    "senha": new FormControl("", [Validators.required, Validators.minLength(6)])
+    // "foto": new FormControl("", [Validators.required]),
+    "senha": new FormControl("", [Validators.required, Validators.minLength(6)]),
+    "repetirSenha": new FormControl("", [Validators.required, compareValidator('senha')]),
   })
 
   constructor(
