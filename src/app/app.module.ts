@@ -32,7 +32,7 @@ import { ProdutoComponent } from './admin/views/produto/produto.component';
 import { SidebarComponent } from './admin/sidebar/sidebar.component';
 import { HeaderComponent } from './admin/header/header.component';
 import { FooterComponent } from './admin/footer/footer.component';
-import { CompareValidatorDirective } from './shared/compare-validator.directive';
+import { CompareValidatorDirective } from './directives/compare-validator.directive';
 
 @NgModule({
   declarations: [
