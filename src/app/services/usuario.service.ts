@@ -30,10 +30,11 @@ export class UsuarioService {
    })
   }  
 
-  //desativar usuario
+  //deletar usuario
   async desativateUser(){
     return this.afa.authState.subscribe((user)=>{
       user.delete()
+      this.af.collection("users").doc(user.uid).delete()
     })
   }
 

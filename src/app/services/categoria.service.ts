@@ -18,7 +18,7 @@ export class CategoriaService {
 
   //pegar as categorias ativas
   getData(usuario:Usuario){
-    return this.af.collection("categoria").doc(usuario.uid).collection("user", ref=> ref.where("esta_ativo", "==", true).orderBy("dtCadastro"))
+    return this.af.collection("users").doc(usuario.uid).collection("categoria", ref=> ref.where("esta_ativo", "==", true).orderBy("dtCadastro"))
     .snapshotChanges().pipe(
       //pegar id dos documentos
       map((e)=>{
@@ -33,7 +33,7 @@ export class CategoriaService {
   
   //pegar as categorias desativadas
   getDataDisable(usuario:Usuario){
-    return this.af.collection("categoria").doc(usuario.uid).collection("user", ref => ref.where("esta_ativo", "==", false).orderBy("dtCadastro"))
+    return this.af.collection("users").doc(usuario.uid).collection("categoria", ref => ref.where("esta_ativo", "==", false).orderBy("dtCadastro"))
     .snapshotChanges().pipe(
       //pegar id dos documentos
       map((e)=>{
@@ -48,7 +48,7 @@ export class CategoriaService {
 
   //adicionar categorias
   addCadategoria(usuario:Usuario, categoria:Categoria){
-    return  this.af.collection("categoria").doc(usuario.uid).collection("user").add({
+    return  this.af.collection("users").doc(usuario.uid).collection("categoria").add({
       nome: categoria.nome,
       descricao: categoria.descricao,
       dtCadastro:new Date(),
@@ -57,7 +57,7 @@ export class CategoriaService {
     .then((id)=>{
       this.afs.ref(`categoria/${id.id}`).put(categoria.foto).then((rs)=>{
         rs.ref.getDownloadURL().then((url)=>{
-          this.af.collection("categoria").doc(usuario.uid).collection("user").doc(id.id).update({
+          this.af.collection("users").doc(usuario.uid).collection("categoria").doc(id.id).update({
             foto:url
           })
         })
@@ -69,7 +69,7 @@ export class CategoriaService {
   editCategoria(usuario:Usuario, categoria:Categoria){
     return this.afs.ref(`categoria/${categoria.id}`).put(categoria.foto).then((rs)=>{
       rs.ref.getDownloadURL().then((url)=>{
-        this.af.collection("categoria").doc(usuario.uid).collection("user").add({
+        this.af.collection("users").doc(usuario.uid).collection("categoria").add({
           nome: categoria.nome,
           descricao: categoria.descricao,
           foto: url,
@@ -82,21 +82,21 @@ export class CategoriaService {
 
   //deletar categoria
   deleteCategoria(usuario:Usuario, categoria:Categoria){
-    return this.af.collection("categoria").doc(usuario.uid).collection("user").doc(categoria.id).delete().then((rs)=>{
+    return this.af.collection("users").doc(usuario.uid).collection("categoria").doc(categoria.id).delete().then((rs)=>{
       this.afs.ref(`categoria/${categoria.id}`).delete()
     })
   }
 
   //desativar categoria
   disableCategoria(usuario:Usuario, categoria:Categoria){
-    return this.af.collection("categoria").doc(usuario.uid).collection("user").doc(categoria.id).update({
+    return this.af.collection("users").doc(usuario.uid).collection("categoria").doc(categoria.id).update({
       esta_ativo:false
     })
   }
 
   //ativar categoria
   activateCategoria(usuario:Usuario, categoria:Categoria){
-    return this.af.collection("categoria").doc(usuario.uid).collection("user").doc(categoria.id).update({
+    return this.af.collection("users").doc(usuario.uid).collection("user").doc(categoria.id).update({
       esta_ativo:true
     })
   }

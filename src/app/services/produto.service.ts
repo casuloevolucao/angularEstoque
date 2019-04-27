@@ -18,7 +18,7 @@ export class produtoService {
 
   //pegar as produtos ativos
   getData(usuario:Usuario){
-    return this.af.collection("produto").doc(usuario.uid).collection("user", ref=> ref.where("esta_ativo", "==", true).orderBy("dtCadastro"))
+    return this.af.collection("users").doc(usuario.uid).collection("produto", ref=> ref.where("esta_ativo", "==", true).orderBy("dtCadastro"))
     .snapshotChanges().pipe(
       //pegar id dos documentos
       map((e)=>{
@@ -33,7 +33,7 @@ export class produtoService {
 
   //pegar as produtos desativados
   getDataDisable(usuario:Usuario){
-    return this.af.collection("produto").doc(usuario.uid).collection("user", ref => ref.where("esta_ativo", "==", false).orderBy("dtCadastro"))
+    return this.af.collection("users").doc(usuario.uid).collection("produto", ref => ref.where("esta_ativo", "==", false).orderBy("dtCadastro"))
     .snapshotChanges().pipe(
       //pegar id dos documentos
       map((e)=>{
@@ -48,7 +48,7 @@ export class produtoService {
 
   //adicionar produtos
   addProduto(usuario:Usuario, produto:Produto){
-    return  this.af.collection("produto").doc(usuario.uid).collection("user").add({
+    return  this.af.collection("users").doc(usuario.uid).collection("produto").add({
       nome: produto.nome,
       descricao: produto.descricao,
       quantidade: produto.quantidade,
@@ -58,7 +58,7 @@ export class produtoService {
     .then((id)=>{
       this.afs.ref(`produto/${id.id}`).put(produto.foto).then((rs)=>{
         rs.ref.getDownloadURL().then((url)=>{
-          this.af.collection("produto").doc(usuario.uid).collection("user").doc(id.id).update({
+          this.af.collection("users").doc(usuario.uid).collection("produto").doc(id.id).update({
             foto:url
           })
         })
@@ -70,7 +70,7 @@ export class produtoService {
   editProduto(usuario:Usuario, produto:Produto){
     return this.afs.ref(`produto/${produto.id}`).put(produto.foto).then((rs)=>{
       rs.ref.getDownloadURL().then((url)=>{
-        this.af.collection("produto").doc(usuario.uid).collection("user").add({
+        this.af.collection("users").doc(usuario.uid).collection("produto").add({
           nome: produto.nome,
           descricao: produto.descricao,
           foto: url,
@@ -83,21 +83,22 @@ export class produtoService {
 
   //deletar produto
   deleteProduto(usuario:Usuario, produto:Produto){
-    return this.af.collection("produto").doc(usuario.uid).collection("user").doc(produto.id).delete().then((rs)=>{
+    return this.af.collection("users").doc(usuario.uid).collection("produto").doc(produto.id).delete()
+    .then(()=>{
       this.afs.ref(`produto/${produto.id}`).delete()
     })
   }
 
   //desabilitar produto
   disableProduto(usuario:Usuario, produto:Produto){
-    return this.af.collection("produto").doc(usuario.uid).collection("user").doc(produto.id).update({
+    return this.af.collection("users").doc(usuario.uid).collection("produto").doc(produto.id).update({
       esta_ativo:false
     })
   }
 
   //ativar produto
   activateProduto(usuario:Usuario, produto:Produto){
-    return this.af.collection("produto").doc(usuario.uid).collection("user").doc(produto.id).update({
+    return this.af.collection("users").doc(usuario.uid).collection("produto").doc(produto.id).update({
       esta_ativo:false
     })
   }
