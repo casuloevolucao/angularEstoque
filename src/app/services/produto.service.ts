@@ -47,22 +47,51 @@ export class produtoService {
   }
 
   //adicionar produtos
-  addProduto(usuario:Usuario, produto:Produto){
-    return  this.af.collection("users").doc(usuario.uid).collection("produto").add({
-      nome: produto.nome,
-      descricao: produto.descricao,
-      quantidade: produto.quantidade,
-      dtCadastro:new Date(),
-      esta_ativo: true
-    })
-    .then((id)=>{
-      this.afs.ref(`produto/${id.id}`).put(produto.foto).then((rs)=>{
-        rs.ref.getDownloadURL().then((url)=>{
-          this.af.collection("users").doc(usuario.uid).collection("produto").doc(id.id).update({
-            foto:url
-          })
+  async addProduto(usuario:Usuario, produto:Produto){
+    return new Promise((resolve, reject)=>{
+      if(usuario.foto != null){
+          this.af.collection("users").doc(usuario.uid).collection("produto").add({
+          nome: produto.nome,
+          descricao: produto.descricao,
+          quantidade: produto.quantidade,
+          valorEntrada: produto.valorEntrada,
+          valorSaida: produto.valorSaida,
+          categoria: produto.categoria,
+          dtCadastro:new Date(),
+          esta_ativo: true
         })
-      })
+        .then((id)=>{
+          this.afs.ref(`produto/${id.id}`).put(produto.foto).then((rs)=>{
+            rs.ref.getDownloadURL().then((url)=>{
+              this.af.collection("users").doc(usuario.uid).collection("produto").doc(id.id).update({
+                foto:url
+              })
+            })
+          })
+          resolve(id.id)
+        })
+        .catch((e)=>{
+          reject(e)
+        })
+      }else{
+        return  this.af.collection("users").doc(usuario.uid).collection("produto").add({
+          nome: produto.nome,
+          descricao: produto.descricao,
+          quantidade: produto.quantidade,
+          valorEntrada: produto.valorEntrada,
+          valorSaida: produto.valorSaida,
+          categoria: produto.categoria,
+          dtCadastro:new Date(),
+          foto:"",
+          esta_ativo: true
+        })
+        .then((id)=>{
+          resolve(id.id)
+        })
+        .catch((e)=>{
+          reject(e)
+        })
+      }
     })
   }
 

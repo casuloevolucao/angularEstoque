@@ -30,7 +30,7 @@ export class CadastroComponent implements OnInit {
     private loginS:LoginService,
     private usuarioS:UsuarioService,
     private spinner:NgxSpinnerService,
-    private toastr:ToastrService
+    private toastr:ToastrService,
   ) { }
 
   ngOnInit() {

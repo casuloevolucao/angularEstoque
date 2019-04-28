@@ -1,0 +1,26 @@
+<button type="submit" class="btn btn-success" (click)="submit()">Teste</button>
+<div *ngIf="results" class="container-fluid">
+    <table class="table table-striped table-bordered dt-responsive nowrap" datatable [dtTrigger]="dtTrigger" [dtOptions]="dtOptions">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>descricao</th>
+            <th>categoria</th>
+            <th>quantidade</th>
+            <th>valorEntrada</th>
+            <th>valorSaida</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let lideres of results; let i">
+            <td>{{lideres.nome}}</td>
+            <td>{{lideres.descricao}}</td>
+            <td>{{lideres.categoria}}</td>
+            <td>{{lideres.quantidade}}</td>
+            <td>{{lideres.valorEntrada}}</td>
+            <td>{{lideres.valorSaida}}</td>
+            </tr>
+        </tbody>
+      </table>
+  </div>
+  

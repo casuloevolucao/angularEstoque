@@ -10,6 +10,7 @@ import { LoginComponent } from './acesso/login/login.component';
 import { CadastroComponent } from './acesso/cadastro/cadastro.component';
 import { ResetComponent } from './acesso/reset/reset.component';
 import { HomeComponent } from './admin/views/home/home.component';
+import { TesteComponent } from './teste/teste.component';
 
 const routes: Routes = [
   {path: "", component: LoginComponent},

@@ -2,6 +2,7 @@ import { Directive, Input } from '@angular/core';
 import { Validator, AbstractControl, ValidationErrors, NG_VALIDATORS, ValidatorFn } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
+//@Author Carlos Eduardo
 export function compareValidator(controlNameToCompare: string): ValidatorFn {
   return (c: AbstractControl): ValidationErrors | null => {
     if (c.value === null || c.value.length === 0) {

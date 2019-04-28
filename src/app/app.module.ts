@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -12,6 +12,9 @@ import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { AngularFireStorageModule } from "@angular/fire/storage";
 import { ReactiveFormsModule } from "@angular/forms";
 import { DataTablesModule } from 'angular-datatables';
+import { registerLocaleData } from '@angular/common';
+import ptBr from '@angular/common/locales/pt';
+registerLocaleData(ptBr)
 
 //Services
 import { AuthGuardService } from './services/auth-guard.service';
@@ -33,6 +36,8 @@ import { SidebarComponent } from './admin/sidebar/sidebar.component';
 import { HeaderComponent } from './admin/header/header.component';
 import { FooterComponent } from './admin/footer/footer.component';
 import { CompareValidatorDirective } from './directives/compare-validator.directive';
+import { TesteComponent } from './teste/teste.component';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 @NgModule({
   declarations: [
@@ -48,6 +53,7 @@ import { CompareValidatorDirective } from './directives/compare-validator.direct
     HeaderComponent,
     FooterComponent,
     CompareValidatorDirective,
+    TesteComponent,
   ],
   imports: [
     BrowserModule,
@@ -64,6 +70,7 @@ import { CompareValidatorDirective } from './directives/compare-validator.direct
     ReactiveFormsModule
   ],
   providers: [
+    { provide: LOCALE_ID, useValue: 'pt' },
     AuthGuardService,
     LoginService,
     UsuarioService,
@@ -72,4 +79,4 @@ import { CompareValidatorDirective } from './directives/compare-validator.direct
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

@@ -7,7 +7,9 @@ export class Produto {
     nome:string
     descricao:string
     quantidade:number
-    valor:number
+    categoria:string
+    valorEntrada:number
+    valorSaida:number
     foto: File | string
     dtCadastro:Date
     esta_ativo:boolean

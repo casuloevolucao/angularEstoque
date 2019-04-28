@@ -4,6 +4,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { Usuario } from '../models/usuario.model';
 import * as firebase from 'firebase'
+import { Router } from '@angular/router';
 
 //@Author Ismael Alves
 @Injectable({
@@ -14,7 +15,8 @@ export class UsuarioService {
   constructor(
     private af:AngularFirestore,
     private afa:AngularFireAuth,
-    private afs:AngularFireStorage
+    private afs:AngularFireStorage,
+    private router:Router
   ) { }
 
   //metodo criar usuario
@@ -25,8 +27,10 @@ export class UsuarioService {
        foto: '',
        email: create.email,
        nome: create.nome,
+       online:false,
        dtCadastro: new Date()
      })
+     this.router.navigate(["/"])
    })
   }  
 
