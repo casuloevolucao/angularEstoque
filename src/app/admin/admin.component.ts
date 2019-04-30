@@ -20,9 +20,7 @@ export class AdminComponent implements OnInit {
   ngOnInit() {
     this.usuarioS.currentUser().then((user:Usuario)=>{
       this.usuario = user
-      console.log(this.usuario)
     }).catch((e)=>{
-      console.log(e)
     })
   }
 }

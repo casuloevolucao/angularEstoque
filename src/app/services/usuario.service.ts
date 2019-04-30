@@ -130,14 +130,14 @@ export class UsuarioService {
   }
   
   getUsersResgistres(){
-    return this.af.collection("users", ref => ref.where('tipoUsuario', '>', '0')).valueChanges()
+    return this.af.collection("users", ref => ref.where('tipoUsuario', '==', 1)).valueChanges()
   }
 
   getUsersOnline(){
-    return this.af.collection("users", ref => ref.where('tipoUsuario', '>', '0').where('online', '==', 'true')).valueChanges()
+    return this.af.collection("users", ref => ref.where('tipoUsuario', '==', 1).where('online', '==', 'true')).valueChanges()
   }
 
   getUsersResgistresDay(){
-    return this.af.collection("users", ref => ref.where('tipoUsuario', '>', '0').where('dtCadastro', '==', new Date())).valueChanges()
+    return this.af.collection("users", ref => ref.where('tipoUsuario', '==', 1).where('dtCadastro', '==', new Date())).valueChanges()
   }
 }
