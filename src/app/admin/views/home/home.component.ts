@@ -26,13 +26,15 @@ export class HomeComponent implements OnInit {
       this.usuario = user
     })
     this.usuarioS.getUsersOnline().subscribe((online:Usuario[])=>{
-      console.log(online)
+      console.log("online",online)
       this.usersOnline = online
     })
     this.usuarioS.getUsersResgistres().subscribe((registre:Usuario[])=>{
+      console.log("registre",registre)
       this.usersRegistres = registre
     })
     this.usuarioS.getUsersResgistresDay().subscribe((day:Usuario[])=>{
+      console.log("day",day)
       this.usersResgitresDay = day
     })
   }

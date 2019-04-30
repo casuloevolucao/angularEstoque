@@ -41,7 +41,9 @@ export class LoginService {
         nome:user.user.displayName,
         foto:user.user.photoURL,
         email:user.user.email,
-        online:true
+        tipoUsuario: 1,
+        online:true,
+        dtCadastro: new Date()
       })
       //pegar token e salvar no localStorage
       this.saveLocalStorage()
@@ -56,7 +58,9 @@ export class LoginService {
         nome:user.user.displayName,
         foto:user.user.photoURL,
         email:user.user.email,
-        online:true
+        tipoUsuario: 1,
+        online:true,
+        dtCadastro: new Date()
       })
       //pegar token e salvar no localStorage
       this.saveLocalStorage()
