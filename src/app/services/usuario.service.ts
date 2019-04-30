@@ -134,10 +134,11 @@ export class UsuarioService {
   }
 
   getUsersOnline(){
-    return this.af.collection("users", ref => ref.where('tipoUsuario', '==', 1).where('online', '==', 'true')).valueChanges()
+    return this.af.collection("users", ref => ref.where('tipoUsuario', '==', 1).where('online', '==', true)).valueChanges()
   }
 
   getUsersResgistresDay(){
-    return this.af.collection("users", ref => ref.where('tipoUsuario', '==', 1).where('dtCadastro', '==', new Date())).valueChanges()
+    console.log(new Date())
+    return this.af.collection("users", ref => ref.where('dtCadastro', '<=', new Date())).valueChanges()
   }
 }
