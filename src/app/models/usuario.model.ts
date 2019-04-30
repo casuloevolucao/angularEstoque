@@ -13,4 +13,5 @@ export class Usuario {
     online:boolean
     dtLogin:Date
     dtCadastro:Date
+    tipoUsuario:number
 }
