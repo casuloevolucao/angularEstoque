@@ -28,6 +28,7 @@ export class UsuarioService {
        email: create.email,
        nome: create.nome,
        online:false,
+       tipoUsuario: 1,
        dtCadastro: new Date()
      })
      this.router.navigate(["/"])
@@ -126,5 +127,17 @@ export class UsuarioService {
         }    
       })
     })
-  } 
+  }
+  
+  getUsersResgistres(){
+    return this.af.collection("users", ref => ref.where('tipoUsuario', '>', '0')).valueChanges()
+  }
+
+  getUsersOnline(){
+    return this.af.collection("users", ref => ref.where('tipoUsuario', '>', '0').where('online', '==', 'true')).valueChanges()
+  }
+
+  getUsersResgistresDay(){
+    return this.af.collection("users", ref => ref.where('tipoUsuario', '>', '0').where('dtCadastro', '==', new Date())).valueChanges()
+  }
 }
