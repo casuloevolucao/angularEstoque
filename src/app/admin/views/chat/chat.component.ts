@@ -90,7 +90,7 @@ export class ChatComponent implements OnInit {
 
   initChat(parter:Usuario){
     this.parter = parter
-    this.chave = this.messageS.getRoom(parter.uid)
+    this.chave = this.messageS.getRoom(this.usuario.uid ,parter.uid)
     this.messageS.getData(this.chave).subscribe((msg:Messagem[])=>{
       this.msg = msg
     })
@@ -103,7 +103,7 @@ export class ChatComponent implements OnInit {
 
   sendMessage(){
     let msg:Messagem = new Messagem(this.form.value)
-    this.messageS.sendMenssage(msg, this.chave, this.usuario).then(()=>{
+    this.messageS.sendMenssage(msg, this.chave, this.usuario, this.parter).then(()=>{
       this.form.reset()
     })
   }

@@ -9,13 +9,17 @@ import { Usuario } from '../models/usuario.model';
 })
 export class MessagemService {
   
+  adminUid:string = 'EtsDKauC0EQXMstWArscfYAvCCi1';
+
+  notification:number = 0;
+
   constructor(
     private af:AngularFirestore,
   ) { }
 
   //pegar msg dos usuarios Cadastrados
   getUsersMsg(){
-    return this.af.collection('users', ref => ref.where('tipoUsuario', '==', 1).where('chat', '==', true)).valueChanges()
+    return this.af.collection('users').doc(this.adminUid).collection('notification').valueChanges()
   }
   
   //pega o admin como parter
@@ -29,7 +33,7 @@ export class MessagemService {
 
   //envia a menssagem
   async sendMenssage(msg:Messagem, key:string, current:Usuario, parter?:Usuario){
-   this.sendNotification(current)
+   this.sendNotification(current, parter)
     return this.af.collection('msg').doc(key).collection("menssagens").add({
       msg:msg.msg,
       dt: new Date(),
@@ -50,39 +54,42 @@ export class MessagemService {
     return localStorage.getItem("keyRoom")
   }
 
-  //limpa notificação
-  clearNotification(users:Usuario){
-    if(users.tipoUsuario == 1){
-      this.af.collection('users').doc(users.uid).update({
-        notification: 0,
-        chat:true
-      })
-    }else{
-      this.af.collection('users').doc('EtsDKauC0EQXMstWArscfYAvCCi1').collection("notification")
-    }
-  }
-
   //envia Notificação
-  sendNotification(current:Usuario){
-    if(current.tipoUsuario == 1){
-      this.af.collection('users').doc(current.uid).update({
-        notification: current.notification += 1,
-        chat:true
+  sendNotification(current:Usuario, parter:Usuario){
+    
+    if(current.tipoUsuario == 0){
+      this.af.collection('users').doc(parter.uid).valueChanges().subscribe((notification:Usuario[])=>{
+        this.notification = notification[0].notification
+      })
+      this.af.collection('users').doc(parter.uid).update({
+        notification: this.notification =+ 1
       })
     }else{
-      this.af.collection('users').doc('EtsDKauC0EQXMstWArscfYAvCCi1').collection("notification")
+      this.af.collection('users').doc(this.adminUid).collection("notification").doc(parter.uid).valueChanges().subscribe((notification:Usuario[])=>{
+        this.notification = notification[0].notification
+      })
+      this.af.collection('users').doc(this.adminUid).collection("notification").doc(parter.uid).set({
+        uid: current.uid,
+        foto: current.foto,
+        email: current.email,
+        nome: current.nome,
+        online: current.online,
+        tipoUsuario: 1,
+        dtCadastro: current.dtCadastro,
+        notification: this.notification += 1
+      })
     }
   }
 
   //pega a sala de bate-papo
-  getRoom(uid2:string):string{
-    let uid1 = 'EtsDKauC0EQXMstWArscfYAvCCi1';
+  getRoom(uid1, uid2:string):string{
     let keyRoom:string;
     if(uid1 < uid2 ){
       keyRoom = `${uid1}${uid2}`
     }else{
       keyRoom = `${uid2}${uid1}`
     }
+    console.log(keyRoom)
     return keyRoom
   }
 }
