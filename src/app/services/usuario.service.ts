@@ -139,6 +139,6 @@ export class UsuarioService {
 
   getUsersResgistresDay(){
     console.log(new Date())
-    return this.af.collection("users", ref => ref.where('dtCadastro', '<=', new Date())).valueChanges()
+    return this.af.collection("users", ref => ref.where('tipoUsuario', '==', 1).where('dtCadastro', '<=', new Date())).valueChanges()
   }
 }
