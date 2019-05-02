@@ -37,7 +37,12 @@ import { HeaderComponent } from './admin/header/header.component';
 import { FooterComponent } from './admin/footer/footer.component';
 import { CompareValidatorDirective } from './directives/compare-validator.directive';
 import { TesteComponent } from './teste/teste.component';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { UsuariosComponent } from './admin/views/usuarios/usuarios.component';
+import { OnlineComponent } from './admin/views/online/online.component';
+import { NotfoundComponent } from './admin/erros/notfound/notfound.component';
+import { NotuthorizationComponent } from './admin/erros/notuthorization/notuthorization.component';
+import { ChatComponent } from './admin/views/chat/chat.component';
+import { MessagemService } from './services/messagem.service';
 
 @NgModule({
   declarations: [
@@ -54,6 +59,11 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
     FooterComponent,
     CompareValidatorDirective,
     TesteComponent,
+    UsuariosComponent,
+    OnlineComponent,
+    NotfoundComponent,
+    NotuthorizationComponent,
+    ChatComponent,
   ],
   imports: [
     BrowserModule,
@@ -76,6 +86,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
     UsuarioService,
     CategoriaService,
     produtoService,
+    MessagemService
   ],
   bootstrap: [AppComponent]
 })

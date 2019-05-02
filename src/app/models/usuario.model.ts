@@ -14,4 +14,6 @@ export class Usuario {
     dtLogin:Date
     dtCadastro:Date
     tipoUsuario:number
+    notification:number
+    chat:boolean
 }

@@ -1,3 +1,52 @@
-<p>
-  sidebar works!
-</p>
+<!-- Left side column. contains the logo and sidebar -->
+<aside class="main-sidebar">
+  <!-- sidebar: style can be found in sidebar.less -->
+  <section class="sidebar">
+    <!-- Sidebar user panel -->
+    <div class="user-panel">
+      <div class="pull-left image">
+        <img *ngIf="usuario.foto; else fotoPadrao" height="160" width="160" [src]="usuario.foto" class="img-circle" alt="User Image">
+        <ng-template #fotoPadrao>
+          <img height="160" width="160" src="./assets/imgs/user.png" class="img-circle" alt="User Image">
+        </ng-template>
+      </div>
+      <div class="pull-left info">
+        <p>{{usuario.nome}}</p>
+        <a routerLink="/admin"><i class="fa fa-circle text-success"></i> Online</a>
+      </div>
+    </div>
+
+    <!-- sidebar menu: : style can be found in sidebar.less -->
+    <ul class="sidebar-menu" data-widget="tree">
+      <li class="header">MENU DE NAVEGAÇÃO</li>
+      <li  class="treeview">
+        <a routerLink="/admin">
+          <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+        </a>
+      </li>
+      <li routerLinkActive="active" class="treeview">
+        <a routerLink="/admin/chat">
+          <i class="fa fa-comments-o"></i>
+          <span>Chat</span>
+          <span class="pull-right-container">
+            <span class="label label-primary pull-right">4</span>
+          </span>
+        </a>
+      </li>
+      <li routerLinkActive="active" class="treeview">
+        <a href="#">
+          <i class="fa fa-users"></i>
+          <span>Usuarios</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+          <li routerLinkActive="active"><a routerLink="/admin/users"><i class="fa fa-circle-o"></i> Todos</a></li>
+          <li routerLinkActive="active"><a routerLink="/admin/online"><i class="fa fa-circle-o"></i> Online</a></li>
+        </ul>
+      </li>
+    </ul>
+  </section>
+  <!-- /.sidebar -->
+</aside>

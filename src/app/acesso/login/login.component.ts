@@ -34,7 +34,6 @@ export class LoginComponent implements OnInit {
     this.spinner.show()
     this.loginS.loginFacebook()
     .then(()=>{
-      this.spinner.hide()
       this.toastr.success("login feito com sucesso!!!")
     })
     .catch((e)=>{
@@ -48,7 +47,6 @@ export class LoginComponent implements OnInit {
     this.spinner.show()
     this.loginS.loginGoogle()
     .then(()=>{
-      this.spinner.hide()
       this.toastr.success("login feito com sucesso!!!")
     })
     .catch((e)=>{
@@ -62,7 +60,6 @@ export class LoginComponent implements OnInit {
     this.spinner.show()
     let usuario:Usuario = new Usuario(this.form.value)
     this.loginS.login(usuario).then(()=>{
-      this.spinner.hide()
       this.toastr.success(`Usuário ${usuario.email} logado com sucesso!!!`)
     }).catch((e)=>{
       this.spinner.hide()

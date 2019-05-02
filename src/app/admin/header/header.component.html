@@ -1,3 +1,120 @@
-<p>
-  header works!
-</p>
+<header class="main-header">
+    <!-- Logo -->
+    <a href="index2.html" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini"><b>A</b>LT</span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><b>Admin</b>LTE</span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+        <span class="sr-only">Toggle navigation</span>
+      </a>
+
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <!-- Notifications: style can be found in dropdown.less -->
+          <li class="dropdown notifications-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="fa fa-bell-o"></i>
+              <span class="label label-warning">10</span>
+            </a>
+            <ul class="dropdown-menu">
+              <li class="header">You have 10 notifications</li>
+              <li>
+                <!-- inner menu: contains the actual data -->
+                <ul class="menu">
+                  <li>
+                    <a *ngIf="usuario.tipoUsuario == 1" (click)="initChat(usuario)">
+                      <i class="fa fa-comments-o text-aqua"></i> 5 novas mensagens do Adminstrador
+                    </a>
+                    <a *ngIf="usuario.tipoUsuario == 0" routerLink="/admin/chat">
+                      <i class="fa fa-comments-o text-aqua"></i> 5 novas mensagens
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li class="footer"><a href="#">View all</a></li>
+            </ul>
+          </li>
+          <!-- User Account: style can be found in dropdown.less -->
+          <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <img [src]="usuario.foto != null ? usuario.foto : '../../../../assets//imgs/user.png'" class="user-image" alt="User Image">
+              <span class="hidden-xs">{{usuario.nome}}</span>
+            </a>
+            <ul class="dropdown-menu">
+              <!-- User image -->
+              <li class="user-header">
+                <img [src]="usuario.foto != null ? usuario.foto : '../../../../assets//imgs/user.png'" class="img-circle" alt="User Image">
+
+                <p>
+                  {{usuario.nome}}
+                  <small>{{date | date:'dd/MM/y HH:mm:ss'}}</small>
+                </p>
+              </li>
+              <!-- Menu Footer-->
+              <li class="user-footer">
+                <div class="pull-left">
+                  <a href="#" class="btn btn-default btn-flat">Perfil</a>
+                </div>
+                <div class="pull-right">
+                  <button (click)="logout()"class="btn btn-default btn-flat">Logout</button>
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <!-- DIRECT CHAT -->
+<div [hidden]="!chave" #scrollMe [scrollTop]="scrollMe.scrollHeight" class="box box-success direct-chat direct-chat-warning box-chat">
+    <div class="box-header">
+      <h3 class="box-title">Chat Com Adminstrador</h3>
+      <div class="box-tools pull-right">
+        <!--<span data-toggle="tooltip" title="3 New Messages" class="badge bg-yellow">3</span>-->
+        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+        </button>
+        <button type="button" class="btn btn-box-tool" (click)="closeChat()"><i class="fa fa-times"></i>
+        </button>
+      </div>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body" style="height: 400px">
+      <!-- Conversations are loaded here -->
+      <div *ngFor="let menssage of msg" class="direct-chat-messages">
+        
+        <!-- Message. Default to the left -->
+        <div [class]="usuario.email == menssage.email ? 'direct-chat-msg right':'direct-chat-msg'">
+          <div class="direct-chat-info clearfix">
+            <span [class]="usuario.email == menssage.email ? 'direct-chat-name pull-right' : 'direct-chat-name pull-left'">{{menssage.nome}}</span>
+            <span [class]="usuario.email == menssage.email ? 'direct-chat-timestamp pull-left' : 'direct-chat-timestamp pull-right'">{{menssage.dt.toDateString | date}}</span>
+          </div>
+          <!-- /.direct-chat-info -->
+          <img height="40px" width="40px" [class]="usuario.email == menssage.email ? 'contacts-list-img pull-right' : 'contacts-list-img'" [src]="menssage.foto != null ? menssage.foto : '../../../../assets/imgs/user.png'" alt="User Image">
+          <!-- /.direct-chat-img -->
+          <div class="direct-chat-text">
+            {{menssage.msg}}
+          </div>
+          <!-- /.direct-chat-text -->
+        </div>
+        <!-- /.direct-chat-msg -->
+        </div>
+      </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+      <form [formGroup]="form" (ngSubmit)="sendMessage()">
+        <div class="input-group">
+          <input formControlName="msg" type="text" name="message" placeholder="Sua Messgaem..." class="form-control">
+          <span class="input-group-btn">
+            <button type="submit" class="btn btn-success btn-flat"><i class="fa fa-send"></i></button>
+          </span>
+        </div>
+      </form>
+    </div>
+    <!-- /.box-footer-->
+  </div>
+  <!--/.direct-chat -->
