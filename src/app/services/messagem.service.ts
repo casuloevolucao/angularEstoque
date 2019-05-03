@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Messagem } from '../models/messagem.model';
 import { Usuario } from '../models/usuario.model';
+import { Config } from '../models/config.model';
 
 //@Author Ismael Alves
 @Injectable({
@@ -12,6 +13,8 @@ export class MessagemService {
   adminUid:string = 'EtsDKauC0EQXMstWArscfYAvCCi1';
 
   notification:number = 0;
+
+  config:Config = new Config();
 
   constructor(
     private af:AngularFirestore,
@@ -33,8 +36,16 @@ export class MessagemService {
 
   //envia a menssagem
   async sendMenssage(msg:Messagem, key:string, current:Usuario, parter?:Usuario){
-   this.sendNotification(current, parter)
-    return this.af.collection('msg').doc(key).collection("menssagens").add({
+    if(this.getSalveKeyRoom() == null){
+      this.salveKeyRoom(key)
+    }
+    if(this.getSalveKeyRoom() != key){
+      this.setChatConfigOf(key, current)
+      this.salveKeyRoom(key)
+    }
+    this.setChatConfigOn(key, current, parter)
+    await this.sendNotification(key, current, parter)
+    return await this.af.collection('msg').doc(key).collection("menssagens").add({
       msg:msg.msg,
       dt: new Date(),
       nome: current.nome,
@@ -44,30 +55,24 @@ export class MessagemService {
     })
   }
 
-  //salva o chat ativo
-  salveRoom(ketRoom:string){
-    localStorage.setItem("keyRoom", ketRoom)
-  }
-
-  //pegar chat Ativo
-  getSalveRoom():string{
-    return localStorage.getItem("keyRoom")
-  }
-
   //envia Notificação
-  sendNotification(current:Usuario, parter:Usuario){
-    
-    if(current.tipoUsuario == 0){
+   async sendNotification( keyRoom:string ,current:Usuario, parter:Usuario){
+    await this.af.collection('msg').doc(keyRoom).valueChanges().subscribe((config:Config)=>{
+      console.log(config)
+      this.config = config
+    })
+    if((current.tipoUsuario == 0 && this.config.admin) || (current.tipoUsuario == 0 && this.config.client)){
       this.af.collection('users').doc(parter.uid).valueChanges().subscribe((notification:Usuario[])=>{
         this.notification = notification[0].notification
       })
       this.af.collection('users').doc(parter.uid).update({
         notification: this.notification =+ 1
       })
-    }else{
+    }else if((current.tipoUsuario == 1 && this.config.admin) || (current.tipoUsuario == 1 && this.config.client)){
       this.af.collection('users').doc(this.adminUid).collection("notification").doc(parter.uid).valueChanges().subscribe((notification:Usuario[])=>{
         this.notification = notification[0].notification
       })
+      console.log("entrou")
       this.af.collection('users').doc(this.adminUid).collection("notification").doc(parter.uid).set({
         uid: current.uid,
         foto: current.foto,
@@ -78,7 +83,41 @@ export class MessagemService {
         dtCadastro: current.dtCadastro,
         notification: this.notification += 1
       })
+    }else{
+      
+    }   
+  }
+
+  async setChatConfigOn(keyRoom:string , current:Usuario, parter:Usuario){
+    if(current.tipoUsuario == 0){
+      this.af.collection('msg').doc(keyRoom).set({
+        admin:true,
+      })
+    }else if (current.tipoUsuario == 1){
+      this.af.collection('msg').doc(keyRoom).set({
+        client:true
+      })
     }
+  }
+
+  async setChatConfigOf(keyRoom:string , current:Usuario){
+    if(current.tipoUsuario == 0){
+      this.af.collection('msg').doc(keyRoom).update({
+        admin:false
+      })
+    }else{
+      this.af.collection('msg').doc(keyRoom).update({
+        client:false
+      })
+    }
+  }
+
+  salveKeyRoom(keyRoom:string){
+    localStorage.setItem("keyRoom", keyRoom)
+  }
+
+  getSalveKeyRoom():string{
+    return localStorage.getItem("keyRoom")
   }
 
   //pega a sala de bate-papo
