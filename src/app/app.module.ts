@@ -13,6 +13,7 @@ import { AngularFireStorageModule } from "@angular/fire/storage";
 import { ReactiveFormsModule } from "@angular/forms";
 import { DataTablesModule } from 'angular-datatables';
 import { registerLocaleData } from '@angular/common';
+import { ModalModule } from 'ngx-bootstrap/modal'; 
 import ptBr from '@angular/common/locales/pt';
 registerLocaleData(ptBr)
 
@@ -77,7 +78,8 @@ import { MessagemService } from './services/messagem.service';
     AngularFireAuthModule,
     AngularFirestoreModule,
     AngularFireStorageModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ModalModule.forRoot()
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'pt' },

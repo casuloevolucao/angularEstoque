@@ -36,7 +36,8 @@ const routes: Routes = [
       data:{
         permission: 'admin'
       }, component: ChatComponent},
-    {path:"produtos", component: ProdutoComponent},
+    {path:"produtos", canActivate:[AuthGuardService],
+      component: ProdutoComponent},
     {path:"categorias", component: CategoriaComponent},
     {path:"authorization", component: NotuthorizationComponent},
     {path:"**", component:NotfoundComponent},
