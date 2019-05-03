@@ -53,9 +53,8 @@ export class HeaderComponent implements OnInit {
     })
   }
 
-  initChat(parter:Usuario){
-    this.parter = parter
-    this.chave = this.messageS.getRoom(parter.uid)
+  initChat(){
+    this.chave = this.messageS.getRoom(this.usuario.uid ,this.parter.uid)
     this.messageS.getData(this.chave).subscribe((msg:Messagem[])=>{
       this.msg = msg
     })
@@ -67,8 +66,7 @@ export class HeaderComponent implements OnInit {
 
   sendMessage(){
     let msg:Messagem = new Messagem(this.form.value)
-    console.log(this.usuario.notification)
-    this.messageS.sendMenssage(msg, this.chave, this.usuario).then(()=>{
+    this.messageS.sendMenssage(msg, this.chave, this.usuario, this.parter).then(()=>{
       this.form.reset()
     })
   }

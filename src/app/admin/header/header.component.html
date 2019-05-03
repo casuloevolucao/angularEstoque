@@ -27,7 +27,7 @@
                 <!-- inner menu: contains the actual data -->
                 <ul class="menu">
                   <li>
-                    <a *ngIf="usuario.tipoUsuario == 1" (click)="initChat(usuario)">
+                    <a *ngIf="usuario.tipoUsuario == 1" (click)="initChat()">
                       <i class="fa fa-comments-o text-aqua"></i> 5 novas mensagens do Adminstrador
                     </a>
                     <a *ngIf="usuario.tipoUsuario == 0" routerLink="/admin/chat">
@@ -108,7 +108,7 @@
     <div class="box-footer">
       <form [formGroup]="form" (ngSubmit)="sendMessage()">
         <div class="input-group">
-          <input formControlName="msg" type="text" name="message" placeholder="Sua Messgaem..." class="form-control">
+          <input formControlName="msg" type="text" name="message" placeholder="Sua Messagem..." class="form-control">
           <span class="input-group-btn">
             <button type="submit" class="btn btn-success btn-flat"><i class="fa fa-send"></i></button>
           </span>
