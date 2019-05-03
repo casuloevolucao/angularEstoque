@@ -43,7 +43,7 @@ export class MessagemService {
       this.setChatConfigOf(key, current)
       this.salveKeyRoom(key)
     }
-    this.setChatConfigOn(key, current, parter)
+    await this.setChatConfigOn(key, current, parter)
     await this.sendNotification(key, current, parter)
     return await this.af.collection('msg').doc(key).collection("menssagens").add({
       msg:msg.msg,
@@ -58,22 +58,27 @@ export class MessagemService {
   //envia Notificação
    async sendNotification( keyRoom:string ,current:Usuario, parter:Usuario){
     await this.af.collection('msg').doc(keyRoom).valueChanges().subscribe((config:Config)=>{
+      if(config.admin == undefined){
+        config.admin = false
+      }else if(config.client == undefined){
+        config.client = false
+      }
       console.log(config)
       this.config = config
     })
     if((current.tipoUsuario == 0 && this.config.admin) || (current.tipoUsuario == 0 && this.config.client)){
-      this.af.collection('users').doc(parter.uid).valueChanges().subscribe((notification:Usuario[])=>{
+      await this.af.collection('users').doc(parter.uid).valueChanges().subscribe((notification:Usuario[])=>{
         this.notification = notification[0].notification
       })
-      this.af.collection('users').doc(parter.uid).update({
+      await this.af.collection('users').doc(parter.uid).update({
         notification: this.notification =+ 1
       })
     }else if((current.tipoUsuario == 1 && this.config.admin) || (current.tipoUsuario == 1 && this.config.client)){
-      this.af.collection('users').doc(this.adminUid).collection("notification").doc(parter.uid).valueChanges().subscribe((notification:Usuario[])=>{
+      await this.af.collection('users').doc(this.adminUid).collection("notification").doc(parter.uid).valueChanges().subscribe((notification:Usuario[])=>{
         this.notification = notification[0].notification
       })
       console.log("entrou")
-      this.af.collection('users').doc(this.adminUid).collection("notification").doc(parter.uid).set({
+      await this.af.collection('users').doc(this.adminUid).collection("notification").doc(parter.uid).set({
         uid: current.uid,
         foto: current.foto,
         email: current.email,
@@ -83,18 +88,16 @@ export class MessagemService {
         dtCadastro: current.dtCadastro,
         notification: this.notification += 1
       })
-    }else{
-      
-    }   
+    } 
   }
 
   async setChatConfigOn(keyRoom:string , current:Usuario, parter:Usuario){
     if(current.tipoUsuario == 0){
-      this.af.collection('msg').doc(keyRoom).set({
+      await this.af.collection('msg').doc(keyRoom).set({
         admin:true,
       })
     }else if (current.tipoUsuario == 1){
-      this.af.collection('msg').doc(keyRoom).set({
+      await this.af.collection('msg').doc(keyRoom).set({
         client:true
       })
     }
