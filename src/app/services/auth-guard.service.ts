@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate } from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { LoginService } from './login.service';
 
 //@Author Ismael Alves
@@ -9,11 +9,12 @@ import { LoginService } from './login.service';
 
 export class AuthGuardService implements CanActivate {
   constructor(
-    private loginS:LoginService
+    private loginS:LoginService,
   ){ }
   
+
   //protege a rota de chat
-  canActivate(){
-    return this.loginS.autenticarLogin()
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot){
+    return this.loginS.usersPermissions(route.data.permission)
   }
 }

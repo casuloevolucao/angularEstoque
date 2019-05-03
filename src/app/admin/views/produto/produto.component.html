@@ -1,3 +1,87 @@
-<p>
-  produto works!
-</p>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <h1>
+      Produtos
+      <small>Listagem de Produtos</small>
+    </h1>
+
+    <!-- EDITAR ROTAS -->
+    <ol class="breadcrumb">
+      <li><a routerLink="/admin"><i class="fa fa-dashboard"></i> Home</a></li>
+      <li><a routerLink="/admin/users">Produtos</a></li>
+      <li class="active">Todos os produtos</li>
+    </ol>
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="box">
+          <div class="box-header">
+            <div class="row">
+                <div class="col-12 col-md-8">
+                  <h3 class="box-title">Todos os produtos</h3>
+                </div>
+                <div class="col-6 col-md-2">
+                    <button type="button" class="btn btn-primary" (click)="openModal(template)">Cadastrar</button>
+                </div>
+                <div class="col-6 col-md-2">
+                  <button class="btn btn-success" disabled>Categorias</button>
+                </div>
+            </div>
+          </div>
+          <!-- /.box-header -->
+          <div class="box-body">
+            <table class="table table-bordered table-hover" datatable [dtTrigger]="dtTrigger" [dtOptions]="dtOptions">
+              <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Nome</th>
+                  <th>Descrição</th>
+                  <th>Quantidade</th>
+                  <th>Valor de entrada</th>
+                  <th>Valor de saída</th>
+                  <th>Categoria</th>
+                  <th>Foto</th>
+                  <th>Estado</th>
+                  <th>Ação</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- <tr *ngFor="let usuario of usuarios;">
+                  <td>{{usuario.nome}}</td>
+                  <td>{{usuario.email}}</td>
+                  <td>{{usuario.dtCadastro.getDate}}</td>
+                  <td><i [class]="usuario.online ? 'fa fa-circle online':'fa fa-circle offline'"></i>{{usuario.online ? 'online':'offline'}}</td>
+                  <td><img height="50px" width="50px" [src]="usuario.foto != null ? usuario.foto : '../../../../assets//imgs/user.png'"></td>
+                </tr> -->
+              </tbody>
+            </table>
+          </div>
+          <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+      </div>
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </section>
+  <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+<!-- Modal de Cadastro -->
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Modal</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    This is a modal.
+  </div>
+</ng-template>

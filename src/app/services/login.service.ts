@@ -5,6 +5,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireStorage } from '@angular/fire/storage';
 import * as firebase from 'firebase';
 import { Usuario } from '../models/usuario.model';
+import { UsuarioService } from './usuario.service';
 
 //@Author Ismael Alves
 @Injectable()
@@ -17,7 +18,7 @@ export class LoginService {
     private router:Router,
     private af:AngularFirestore,
     private afa:AngularFireAuth,
-    private afs:AngularFireStorage
+    private afs:AngularFireStorage,
   ) { }
 
   //metodo de login
@@ -76,6 +77,22 @@ export class LoginService {
       this.router.navigate(['/'])
     }
     return this.IdToken !== undefined
+  }
+
+  //metodo que verifica permissões
+  usersPermissions(permission?:string):Promise<boolean>{
+    return new Promise((resolve, reject)=>{
+     if(permission){
+        if(localStorage.getItem('tipoUsuario') == '0'){
+          resolve(true)
+        }else{
+          resolve(false)
+          this.router.navigate(["/admin/authorization"])
+        }
+     }else{
+       resolve (this.autenticarLogin())
+     }
+    })
   }
 
   //metodo logout

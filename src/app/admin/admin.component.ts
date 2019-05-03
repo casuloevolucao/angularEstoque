@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { UsuarioService } from '../services/usuario.service';
 import { Usuario } from '../models/usuario.model';
-import { LoginService } from '../services/login.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-admin',
@@ -10,17 +10,18 @@ import { LoginService } from '../services/login.service';
 })
 export class AdminComponent implements OnInit {
 
-  @Input() usuario:Usuario
+  usuario:Usuario = new Usuario()
 
   constructor(
     private usuarioS:UsuarioService,
-    private loginS:LoginService
+    private spinner:NgxSpinnerService,
   ) { }
 
   ngOnInit() {
     this.usuarioS.currentUser().then((user:Usuario)=>{
+      localStorage.setItem('tipoUsuario', user.tipoUsuario.toString())
+      this.spinner.hide()
       this.usuario = user
-    }).catch((e)=>{
     })
   }
 }

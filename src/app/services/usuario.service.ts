@@ -24,7 +24,7 @@ export class UsuarioService {
     return this.afa.auth.createUserWithEmailAndPassword(create.email, create.senha).then((user)=>{
      this.af.collection('users').doc(user.user.uid).set({
        uid: user.user.uid,
-       foto: '',
+       foto: null,
        email: create.email,
        nome: create.nome,
        online:false,
@@ -129,16 +129,19 @@ export class UsuarioService {
     })
   }
   
+  //pegar todos os clientes registrados
   getUsersResgistres(){
     return this.af.collection("users", ref => ref.where('tipoUsuario', '==', 1)).valueChanges()
   }
 
+  //pegar todos os clientes que estão online
   getUsersOnline(){
     return this.af.collection("users", ref => ref.where('tipoUsuario', '==', 1).where('online', '==', true)).valueChanges()
   }
 
+  //pegar todos os clientes registrados hoje
   getUsersResgistresDay(){
-    console.log(new Date())
     return this.af.collection("users", ref => ref.where('tipoUsuario', '==', 1).where('dtCadastro', '<=', new Date())).valueChanges()
   }
+
 }

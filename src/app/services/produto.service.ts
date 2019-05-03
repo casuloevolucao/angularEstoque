@@ -131,4 +131,5 @@ export class produtoService {
       esta_ativo:false
     })
   }
+
 }

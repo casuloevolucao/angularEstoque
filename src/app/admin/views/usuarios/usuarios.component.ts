@@ -1,36 +1,26 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
-import { Usuario } from 'src/app/models/usuario.model';
+import { Component, OnInit } from '@angular/core';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { Usuario } from 'src/app/models/usuario.model';
 import { Subject } from 'rxjs';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { produtoService } from 'src/app/services/produto.service';
-import { Produto } from 'src/app/models/produto.model';
 
 @Component({
-  selector: 'app-produto',
-  templateUrl: './produto.component.html',
-  styleUrls: ['./produto.component.css']
+  selector: 'app-usuarios',
+  templateUrl: './usuarios.component.html',
+  styleUrls: ['./usuarios.component.css']
 })
-export class ProdutoComponent implements OnInit {
-
-  modalRef: BsModalRef;
-
-  // Currente User
-  usuario:Usuario = new Usuario()
+export class UsuariosComponent implements OnInit {
 
   //data
-  produtos:Produto[] = new Array<Produto>()
+  usuarios:Usuario[] = new Array<Usuario>()
 
   //option da tabela
   dtOptions:DataTables.Settings = {}
   
   //controlado de dados da tabela
   dtTrigger: Subject<any> = new Subject();
-
+  
   constructor(
-    private usuarioS:UsuarioService,
-    private modalService: BsModalService,
-    private produtosS: produtoService
+    private usuarioS:UsuarioService
   ) { }
 
   ngOnInit() {
@@ -63,22 +53,14 @@ export class ProdutoComponent implements OnInit {
       pageLength: 5,
       processing: true
     }
-    this.usuarioS.currentUser().then((user:Usuario) => {
-      this.usuario = user
-      this.produtosS.getData(user).subscribe((produtos:Produto[]) => {
-        this.produtos = produtos
-      })
+    this.usuarioS.getUsersResgistres().subscribe((users:Usuario[])=>{
+      this.usuarios = users
+      this.dtTrigger.next()
     })
-    
   }
 
   ngOnDestroy() {
     this.dtTrigger.unsubscribe();
-  }
-
-  // Abre modal
-  openModal(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template);
   }
 
 }
