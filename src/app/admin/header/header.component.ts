@@ -23,7 +23,6 @@ export class HeaderComponent implements OnInit {
   //form message
   form:FormGroup = new FormGroup({
     "msg": new FormControl(null, [Validators.required])
-
   })
 
   //msgs
@@ -68,7 +67,9 @@ export class HeaderComponent implements OnInit {
     let msg:Messagem = new Messagem(this.form.value)
     this.messageS.sendMenssage(msg, this.chave, this.usuario, this.parter).then(()=>{
       this.form.reset()
+      
     })
+    this.messageS.sendNotification(this.chave, this.usuario, this.parter)
   }
 
   logout(){
