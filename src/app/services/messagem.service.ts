@@ -12,10 +12,6 @@ export class MessagemService {
   
   adminUid:string = 'EtsDKauC0EQXMstWArscfYAvCCi1';
 
-  notification:number = 0;
-
-  config:Config = new Config();
-
   constructor(
     private af:AngularFirestore,
   ) { }
@@ -43,8 +39,9 @@ export class MessagemService {
       this.setChatConfigOf(key, current)
       this.salveKeyRoom(key)
     }
+    this.sendNotification(key, current, parter)
     await this.setChatConfigOn(key, current, parter)
-    this.af.collection('msg').doc(key).collection("menssagens").add({
+    return this.af.collection('msg').doc(key).collection("menssagens").add({
       msg:msg.msg,
       dt: new Date(),
       nome: current.nome,
@@ -57,39 +54,52 @@ export class MessagemService {
 
   //envia Notificação
    async sendNotification( keyRoom:string ,current:Usuario, parter:Usuario){
-    return new Promise(async (resolve, reject)=>{
-      this.af.collection('msg').doc(keyRoom).valueChanges().subscribe((config:Config)=>{
-        if(config.admin == undefined){
-          config.admin = false
-        }   
-        console.log(config)
-        this.config = config
-      })
-      if(current.tipoUsuario == 0 ){
-        await this.af.collection('users').doc(parter.uid).valueChanges().subscribe((notification:Usuario[])=>{
-          this.notification = notification[0].notification
-        })
-        await this.af.collection('users').doc(parter.uid).update({
-          notification: this.notification =+ 1
-        })
-        resolve(this.notification)
-      }else if(current.tipoUsuario == 1){
-        await this.af.collection('users').doc(this.adminUid).collection("notification").doc(parter.uid).valueChanges().subscribe((notification:Usuario[])=>{
-          this.notification = notification[0].notification
-        })
-        console.log("entrou")
-        await this.af.collection('users').doc(this.adminUid).collection("notification").doc(parter.uid).set({
-          uid: current.uid,
-          foto: current.foto,
-          email: current.email,
-          nome: current.nome,
-          online: current.online,
-          tipoUsuario: 1,
-          dtCadastro: current.dtCadastro,
-          notification: this.notification += 1
-        })
-        resolve(this.notification)
+
+    this.af.collection('msg').doc(keyRoom).valueChanges().subscribe((config:Config)=>{  
+      if(config.admin == undefined){
+        config.admin = false
       } 
+      console.log(config)
+      console.log(current)
+      console.log(config.admin == false && current.tipoUsuario == 1)
+      if(config.admin == false && current.tipoUsuario == 1){
+       this.sendNotificationClient(current)
+      }
+      if(config.client == false && current.tipoUsuario == 0){
+        console.log("Entrou admin")
+      }
+    })
+    
+    
+  }
+
+  sendNotificationAdmin(current:Usuario){
+    console.log("entrou cliente",current)
+    this.af.collection('users').doc(current.uid).valueChanges().subscribe((notif:Usuario[])=>{
+      console.log(notif[0].notification)
+    })
+  }
+
+  sendNotificationClient(current:Usuario){
+    this.af.collection('users').doc(this.adminUid).collection("notification").doc(current.uid).valueChanges().subscribe((notif:Usuario[])=>{
+      let contNotification:number 
+      
+      if(notif == undefined){
+        contNotification = 0
+      }else{
+        contNotification = notif[0].notification
+      } 
+      console.log("notification", contNotification)
+      this.af.collection('users').doc(this.adminUid).collection("notification").doc(current.uid).set({
+        uid: current.uid,
+        foto: current.foto,
+        email: current.email,
+        nome: current.nome,
+        online: current.online,
+        tipoUsuario: 1,
+        dtCadastro: current.dtCadastro,
+        notification: contNotification += 1
+      })
     })
   }
 

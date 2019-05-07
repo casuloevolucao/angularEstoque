@@ -69,7 +69,6 @@ export class HeaderComponent implements OnInit {
       this.form.reset()
       
     })
-    this.messageS.sendNotification(this.chave, this.usuario, this.parter)
   }
 
   logout(){
