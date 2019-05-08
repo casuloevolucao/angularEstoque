@@ -24,7 +24,7 @@
           <i class="fa fa-dashboard"></i> <span>Dashboard</span>
         </a>
       </li>
-      <li routerLinkActive="active" class="treeview">
+      <li *ngIf="usuario.tipoUsuario == 0" routerLinkActive="active" class="treeview">
         <a routerLink="/admin/chat">
           <i class="fa fa-comments-o"></i>
           <span>Chat</span>
@@ -33,7 +33,7 @@
           </span>
         </a>
       </li>
-      <li routerLinkActive="active" class="treeview">
+      <li *ngIf="usuario.tipoUsuario == 0" routerLinkActive="active" class="treeview">
         <a href="#">
           <i class="fa fa-users"></i>
           <span>Usuarios</span>
@@ -46,7 +46,7 @@
           <li routerLinkActive="active"><a routerLink="/admin/online"><i class="fa fa-circle-o"></i> Online</a></li>
         </ul>
       </li>
-      <li routerLinkActive="active" class="treeview">
+      <li *ngIf="usuario.tipoUsuario == 1" routerLinkActive="active" class="treeview">
         <a href="#">
           <i class="fa fa-users"></i>
           <span>Produtos</span>

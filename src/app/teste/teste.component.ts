@@ -4,6 +4,8 @@ import { RelatorioService } from '../services/relatorio.service';
 import { produtoService } from '../services/produto.service';
 import { Usuario } from '../models/usuario.model';
 import { Subject } from 'rxjs';
+import { CategoriaService } from '../services/categoria.service';
+import { Categoria } from '../models/categoria.model';
 
 @Component({
   selector: 'app-teste',
@@ -24,7 +26,8 @@ export class TesteComponent implements OnInit, OnDestroy  {
 
   constructor(
     private relatorioS:RelatorioService,
-    private produtoS:produtoService
+    private produtoS:produtoService,
+    private categoriaS:CategoriaService
   ) { }
 
   ngOnInit() {
@@ -78,6 +81,14 @@ export class TesteComponent implements OnInit, OnDestroy  {
   }
 
   submit(){
+    let categoria:Categoria = new Categoria()
+    let usuario:Usuario = new Usuario();
+    usuario.uid = "DT6R4inJ6pdeKd6DyzHX0JCmzyV2"
+    let cont = 6
+    for (let i = 0; i < cont; i++) {
+      categoria.nome = `teste categoira ${i}`
+      categoria.descricao = `teste descriçao categoira ${i}`
+    }
     /*let produto:Produto = new Produto();
     let usuario:Usuario = new Usuario();
     usuario.uid = "szVbJL6lrnbfzV0WRjpefqwKL4q2"
@@ -99,7 +110,7 @@ export class TesteComponent implements OnInit, OnDestroy  {
         console.log(e)
       })
     }*/
-    let usuario:Usuario = new Usuario();
+    /*let usuario:Usuario = new Usuario();
     usuario.uid = "szVbJL6lrnbfzV0WRjpefqwKL4q2"
     let mesInicio:Date = new Date(2019, 3,25);
     let mesFim:Date = new Date(2019, 3, 27);
@@ -108,7 +119,7 @@ export class TesteComponent implements OnInit, OnDestroy  {
      console.log(rs)
     }).catch((e)=>{
       console.log(e)
-    })
+    })*/
   }
 
 }

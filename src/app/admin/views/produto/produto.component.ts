@@ -5,6 +5,8 @@ import { Subject } from 'rxjs';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { produtoService } from 'src/app/services/produto.service';
 import { Produto } from 'src/app/models/produto.model';
+import { CategoriaService } from 'src/app/services/categoria.service';
+import { Categoria } from 'src/app/models/categoria.model';
 
 @Component({
   selector: 'app-produto',
@@ -30,7 +32,8 @@ export class ProdutoComponent implements OnInit {
   constructor(
     private usuarioS:UsuarioService,
     private modalService: BsModalService,
-    private produtosS: produtoService
+    private produtosS: produtoService,
+    private categoriaS:CategoriaService
   ) { }
 
   ngOnInit() {
@@ -68,6 +71,9 @@ export class ProdutoComponent implements OnInit {
       this.produtosS.getData(user).subscribe((produtos:Produto[]) => {
         this.produtos = produtos
       })
+      this.categoriaS.getData(user).subscribe((categoria:Categoria[])=>{
+        console.log(categoria)
+      })    
     })
     
   }
