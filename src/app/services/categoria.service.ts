@@ -48,21 +48,30 @@ export class CategoriaService {
 
   //adicionar categorias
   addCadategoria(usuario:Usuario, categoria:Categoria){
-    return  this.af.collection("users").doc(usuario.uid).collection("categoria").add({
-      nome: categoria.nome,
-      descricao: categoria.descricao,
-      dtCadastro:new Date(),
-      esta_ativo: true
-    })
-    .then((id)=>{
-      this.afs.ref(`categoria/${id.id}`).put(categoria.foto).then((rs)=>{
-        rs.ref.getDownloadURL().then((url)=>{
-          this.af.collection("users").doc(usuario.uid).collection("categoria").doc(id.id).update({
-            foto:url
+    if(categoria.foto){
+      return  this.af.collection("users").doc(usuario.uid).collection("categoria").add({
+        nome: categoria.nome,
+        descricao: categoria.descricao,
+        dtCadastro:new Date(),
+        esta_ativo: true
+      })
+      .then((id)=>{
+        this.afs.ref(`categoria/${id.id}`).put(categoria.foto).then((rs)=>{
+          rs.ref.getDownloadURL().then((url)=>{
+            this.af.collection("users").doc(usuario.uid).collection("categoria").doc(id.id).update({
+              foto:url
+            })
           })
         })
       })
-    })
+    }else{
+      return  this.af.collection("users").doc(usuario.uid).collection("categoria").add({
+        nome: categoria.nome,
+        descricao: categoria.descricao,
+        dtCadastro:new Date(),
+        esta_ativo: true
+      })
+    }
   }
 
   //editar categorias

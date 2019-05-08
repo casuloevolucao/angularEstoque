@@ -95,6 +95,9 @@ export class ProdutoComponent implements OnInit {
         this.categorias = categorias
         console.log(categorias)
       })
+      this.categoriaS.getData(user).subscribe((categoria:Categoria[])=>{
+        console.log(categoria)
+      })    
     })
 
   }
@@ -125,6 +128,5 @@ export class ProdutoComponent implements OnInit {
       this.toastr.error("Não foi possivel cadastrar o produto")
     })
   }
-
 
 }
