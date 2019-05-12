@@ -84,19 +84,16 @@ export class ProdutoComponent implements OnInit {
       pageLength: 5,
       processing: true
     }
-    this.usuarioS.currentUser().then((user: Usuario) => {
+    this.usuarioS.currentUser().subscribe((user: Usuario) => {
       this.usuario = user
       this.produtosS.getData(user).subscribe((produtos: Produto[]) => {
         this.produtos = produtos
 
       })
-
       this.categoriaS.getData(user).subscribe((categorias: Categoria[]) => {
         this.categorias = categorias
-        console.log(categorias)
       })
       this.categoriaS.getData(user).subscribe((categoria:Categoria[])=>{
-        console.log(categoria)
       })    
     })
 
@@ -111,9 +108,8 @@ export class ProdutoComponent implements OnInit {
     this.modalRef = this.modalService.show(template);
   }
 
-  public capturarImg(event: Event): void {
+  capturarImg(event: Event): void {
     this.img = (<HTMLInputElement>event.target).files[0]
-    console.log(this.img)
   }
 
   submit() {

@@ -18,7 +18,7 @@ export class AdminComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.usuarioS.currentUser().then((user:Usuario)=>{
+    this.usuarioS.currentUser().subscribe((user:Usuario)=>{
       localStorage.setItem('tipoUsuario', user.tipoUsuario.toString())
       this.spinner.hide()
       this.usuario = user

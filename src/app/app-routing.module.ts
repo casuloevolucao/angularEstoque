@@ -17,6 +17,7 @@ import { CategoriaComponent } from './admin/views/categoria/categoria.component'
 import { NotfoundComponent } from './admin/erros/notfound/notfound.component';
 import { NotuthorizationComponent } from './admin/erros/notuthorization/notuthorization.component';
 import { ChatComponent } from './admin/views/chat/chat.component';
+import { ProdutosdesativadoComponent } from './admin/views/produtosdesativado/produtosdesativado.component';
 
 const routes: Routes = [
   {path: "", component: LoginComponent},
@@ -36,9 +37,10 @@ const routes: Routes = [
       data:{
         permission: 'admin'
       }, component: ChatComponent},
-    {path:"produtos", canActivate:[AuthGuardService],
-      component: ProdutoComponent},
+    {path:"produtos",component: ProdutoComponent},
+    {path:"produtosDesativados",component: ProdutosdesativadoComponent},
     {path:"categorias", component: CategoriaComponent},
+    {path:"categoriasDesativadas",component: ProdutosdesativadoComponent},
     {path:"authorization", component: NotuthorizationComponent},
     {path:"**", component:NotfoundComponent},
   ]}  

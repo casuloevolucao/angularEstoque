@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild } from '@angular/core';
 import { MessagemService } from 'src/app/services/messagem.service';
 import { Subject } from 'rxjs';
 import { Usuario } from 'src/app/models/usuario.model';
@@ -11,7 +11,7 @@ import { UsuarioService } from 'src/app/services/usuario.service';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css']
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, AfterViewChecked {
 
   //chave do chat
   chave:string
@@ -38,6 +38,9 @@ export class ChatComponent implements OnInit {
 
   //msgs
   msg:Messagem[] = new Array<Messagem>()
+
+  @ViewChild('scrollMe') private myScrollContainer: ElementRef;
+
 
   constructor(
     private messageS:MessagemService,
@@ -72,33 +75,45 @@ export class ChatComponent implements OnInit {
         }
       },
       pageLength: 5,
-      processing: true
+      processing: false
     }
     this.messageS.getUsersMsg().subscribe((users:Usuario[])=>{
       this.usuarios = users
-      this.dtTrigger.next()
+      this.dtTrigger.next(users)
     })
-    this.usuarioS.currentUser().then((user:Usuario)=>{
+    this.usuarioS.currentUser().subscribe((user:Usuario)=>{
       this.usuario = user
     })
+    this.scrollToBottom();
   }
 
   ngOnDestroy() {
-    
     this.dtTrigger.unsubscribe();
   }
+  
+  ngAfterViewChecked() {        
+    this.scrollToBottom();        
+  } 
 
   initChat(parter:Usuario){
-    this.parter = parter
+    this.messageS.getParterChat(parter).subscribe((user:Usuario)=>{
+      this.parter = user
+    })
     this.chave = this.messageS.getRoom(this.usuario.uid ,parter.uid)
     this.messageS.getData(this.chave).subscribe((msg:Messagem[])=>{
       this.msg = msg
     })
+    this.messageS.clearNotificationClient(parter)
   }
 
   closeChat(){
     this.chave = undefined;
     this.parter = undefined;
+    this.messageS.setChatConfigOf(MessagemService.getSalveKeyRoom(), this.usuario)
+  }
+
+  awaitChat(){
+    this.messageS.setChatConfigOf(MessagemService.getSalveKeyRoom(), this.usuario)
   }
 
   sendMessage(){
@@ -106,5 +121,12 @@ export class ChatComponent implements OnInit {
     this.messageS.sendMenssage(msg, this.chave, this.usuario, this.parter).then(()=>{
       this.form.reset()
     })
+    this.messageS.clearNotificationClient(this.parter)
+  }
+
+  scrollToBottom(): void {
+    try {
+      this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+    } catch(err) { }                 
   }
 }

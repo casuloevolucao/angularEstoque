@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
 import { Usuario } from 'src/app/models/usuario.model';
 import { LoginService } from 'src/app/services/login.service';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -12,7 +12,7 @@ import { MessagemService } from 'src/app/services/messagem.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, AfterViewChecked {
 
   //chave do chat
   chave:string
@@ -29,10 +29,15 @@ export class HeaderComponent implements OnInit {
   msg:Messagem[] = new Array<Messagem>()
   
   //current usuario
-  @Input() usuario:Usuario = new Usuario()
+  @Input() usuario:Usuario;
 
   //data de agora
   date:number = Date.now()
+
+  //notificação
+  notification:Usuario[]
+
+  @ViewChild('scrollMe') private myScrollContainer: ElementRef;
 
   constructor(
     private loginS:LoginService,
@@ -50,29 +55,49 @@ export class HeaderComponent implements OnInit {
     this.messageS.getAdmin().subscribe((parter:Usuario[])=>{
       this.parter = parter[0]
     })
+    this.messageS.getUsersMsg().subscribe((usuario:Usuario[])=>{
+      this.notification = usuario
+    })
+    this.scrollToBottom();
   }
+
+  ngAfterViewChecked() {        
+    this.scrollToBottom();        
+  } 
 
   initChat(){
     this.chave = this.messageS.getRoom(this.usuario.uid ,this.parter.uid)
     this.messageS.getData(this.chave).subscribe((msg:Messagem[])=>{
       this.msg = msg
+      this.scrollToBottom();
     })
   }
 
   closeChat(){
     this.chave = undefined;
+    this.messageS.setChatConfigOf(MessagemService.getSalveKeyRoom(), this.usuario)
+  }
+
+  awaitChat(){
+    this.messageS.setChatConfigOf(MessagemService.getSalveKeyRoom(), this.usuario)
   }
 
   sendMessage(){
     let msg:Messagem = new Messagem(this.form.value)
     this.messageS.sendMenssage(msg, this.chave, this.usuario, this.parter).then(()=>{
       this.form.reset()
-      
     })
+    this.messageS.clearNotificationAdmin(this.usuario)
+  }
+
+  scrollToBottom(): void {
+    try {
+      this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+    } catch(err) { }                 
   }
 
   logout(){
-    this.loginS.logout(this.usuario.uid)
+    this.loginS.logout(this.usuario)
     .then(()=>{
       this.toastr.success("logout feito com sucesso!!!")
     })

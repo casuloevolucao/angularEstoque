@@ -29,7 +29,9 @@
           <i class="fa fa-comments-o"></i>
           <span>Chat</span>
           <span class="pull-right-container">
-            <span class="label label-primary pull-right">4</span>
+            <span *ngIf="notification > 0" class="label label-primary pull-right">
+              {{notification}}
+            </span>
           </span>
         </a>
       </li>
@@ -48,7 +50,7 @@
       </li>
       <li *ngIf="usuario.tipoUsuario == 1" routerLinkActive="active" class="treeview">
         <a href="#">
-          <i class="fa fa-users"></i>
+          <i class="fa fa-cube"></i>
           <span>Produtos</span>
           <span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i>
@@ -56,9 +58,22 @@
         </a>
         <ul class="treeview-menu">
           <li routerLinkActive="active"><a routerLink="/admin/produtos"><i class="fa fa-circle-o"></i> Listar</a></li>
-          <!-- <li routerLinkActive="active"><a routerLink="/admin/online"><i class="fa fa-circle-o"></i> Cadatrar</a></li> -->
+          <li routerLinkActive="active"><a routerLink="/admin/produtosDesativados"><i class="fa fa-circle-o"></i>Lista Desativados</a></li> 
         </ul>
       </li>
+      <li *ngIf="usuario.tipoUsuario == 1" routerLinkActive="active" class="treeview">
+          <a href="#">
+            <i class="fa fa-list-ul"></i>
+            <span>Categorias</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li routerLinkActive="active"><a routerLink="/admin/categorias"><i class="fa fa-circle-o"></i> Listar</a></li>
+            <li routerLinkActive="active"><a routerLink="/admin/categoriasDesativadas"><i class="fa fa-circle-o"></i>Lista Desativados</a></li> 
+          </ul>
+        </li>
     </ul>
   </section>
   <!-- /.sidebar -->

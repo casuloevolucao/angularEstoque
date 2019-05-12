@@ -5,6 +5,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { Usuario } from '../models/usuario.model';
 import * as firebase from 'firebase'
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 //@Author Ismael Alves
 @Injectable({
@@ -111,20 +112,21 @@ export class UsuarioService {
   }
 
   //metodo que pega usuario autenticado
-  async currentUser(){
+  currentUser(){
     //metodo retornara uma promessa personalizada
-    return new Promise((resolve, reject)=>{
+    return new Observable(
+      (resolve)=>{
       //verificando usuario logado
       this.afa.authState.subscribe(
         user=>{
           //pegando dados do usuário logado
-          this.af.collection("users").doc(user.uid).valueChanges().subscribe((user:Usuario)=>{
-            //caso encontrar dados
-            resolve(user)
-        })
-        error=>{
-          reject(error)
-        }    
+          this.af.collection("users").doc(user.uid).valueChanges().subscribe(
+          (user:Usuario)=>{
+            resolve.next(user)
+          })
+          error=>{
+            resolve.error(error)
+          }    
       })
     })
   }

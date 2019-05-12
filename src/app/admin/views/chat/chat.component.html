@@ -23,7 +23,7 @@
           </div>
           <!-- /.box-header -->
           <div class="box-body">
-            <table class="table table-bordered table-hover" datatable [dtTrigger]="dtTrigger" [dtOptions]="dtOptions">
+            <table class="table table-bordered table-hover">
               <thead>
                 <tr>
                   <th>Nome</th>
@@ -64,8 +64,8 @@
     <div class="box-header" *ngIf="parter">
       <h3 class="box-title">Chat Com {{parter.nome}}</h3>
       <div class="box-tools pull-right">
-        <!--<span data-toggle="tooltip" title="3 New Messages" class="badge bg-yellow">3</span>-->
-        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+        <span *ngIf="parter.notification > 0" data-toggle="tooltip" title="{{parter.notification}} Novas Messagens" class="badge bg-yellow">{{parter.notification}}</span>
+        <button type="button" class="btn btn-box-tool" (click)="awaitChat()" data-widget="collapse"><i class="fa fa-minus"></i>
         </button>
         <button type="button" class="btn btn-box-tool" (click)="closeChat()"><i class="fa fa-times"></i>
         </button>
@@ -74,7 +74,7 @@
     <!-- /.box-header -->
     <div class="box-body" style="height: 400px">
       <!-- Conversations are loaded here -->
-      <div *ngFor="let menssage of msg" #scrollMe [scrollTop]="scrollMe.scrollHeight" class="direct-chat-messages">
+      <div *ngFor="let menssage of msg" #scrollMe class="direct-chat-messages">
         
         <!-- Message. Default to the left -->
         <div [class]="usuario.email == menssage.email ? 'direct-chat-msg right':'direct-chat-msg'">
@@ -99,7 +99,7 @@
         <div class="input-group">
           <input formControlName="msg" type="text" name="message" placeholder="Sua Messagem..." class="form-control">
           <span class="input-group-btn">
-            <button type="submit" class="btn btn-success btn-flat"><i class="fa fa-send"></i></button>
+            <button [disabled]="!form.valid" type="submit" class="btn btn-success btn-flat"><i class="fa fa-send"></i></button>
           </span>
         </div>
       </form>
