@@ -18,6 +18,7 @@ import { NotfoundComponent } from './admin/erros/notfound/notfound.component';
 import { NotuthorizationComponent } from './admin/erros/notuthorization/notuthorization.component';
 import { ChatComponent } from './admin/views/chat/chat.component';
 import { ProdutosdesativadoComponent } from './admin/views/produtosdesativado/produtosdesativado.component';
+import { CategoriadesativadoComponent } from './admin/views/categoriadesativado/categoriadesativado.component';
 
 const routes: Routes = [
   {path: "", component: LoginComponent},
@@ -40,7 +41,7 @@ const routes: Routes = [
     {path:"produtos",component: ProdutoComponent},
     {path:"produtosDesativados",component: ProdutosdesativadoComponent},
     {path:"categorias", component: CategoriaComponent},
-    {path:"categoriasDesativadas",component: ProdutosdesativadoComponent},
+    {path:"categoriasDesativadas",component: CategoriadesativadoComponent},
     {path:"authorization", component: NotuthorizationComponent},
     {path:"**", component:NotfoundComponent},
   ]}  
