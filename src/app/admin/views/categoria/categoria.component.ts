@@ -78,10 +78,16 @@ export class CategoriaComponent implements OnInit {
   }
 
   editar(categoria, template: TemplateRef<any>){
-    this.form.controls["id"].setValue(categoria.id);
+    this.form.patchValue({
+      id:categoria.id,
+      nome:categoria.nome,
+      descricao:categoria.descricao,
+      nofotome:categoria.foto,
+    })
+    /*this.form.controls["id"].setValue(categoria.id);
     this.form.controls["nome"].setValue(categoria.nome);
     this.form.controls["descricao"].setValue(categoria.descricao);
-    this.form.controls["foto"].setValue(categoria.foto);
+    this.form.controls["foto"].setValue(categoria.foto);*/
     this.openModal(template);
   }
 
