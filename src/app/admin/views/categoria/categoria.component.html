@@ -56,7 +56,10 @@
                     <td>{{categoria.descricao}}</td>
                     <td><img height="50px" width="50px" 
                       [src]="categoria.foto != null ? categoria.foto : '../../../../assets//imgs/product.png'"></td>
-                    <!-- <td>{{categoria.}}</td> -->
+                    <td>
+                        <button (click)="editar(categoria, template)" type="button" class="btn btn-primary btn-sm">Editar</button>
+                        <button (click)="excluir(categoria)" type="button" class="btn btn-danger btn-sm">Excluir</button>
+                    </td>
                   </tr>
                 </tbody>
               </table>

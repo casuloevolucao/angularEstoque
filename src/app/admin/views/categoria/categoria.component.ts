@@ -33,6 +33,7 @@ export class CategoriaComponent implements OnInit {
   img: File;
 
   form: FormGroup = new FormGroup({
+    "id": new FormControl(null, []),
     "nome": new FormControl("", [Validators.required]),
     "descricao": new FormControl("", [Validators.required]),
     "foto": new FormControl("", [Validators.required]),
@@ -69,17 +70,44 @@ export class CategoriaComponent implements OnInit {
     this.img = (<HTMLInputElement>event.target).files[0]
   }
 
+  excluir(categoria){
+    this.categoriaS.deleteCategoria(this.usuario, categoria).then((result)=>{
+      console.log(result)
+      this.toastr.success("Categoria excluída com sucesso!")
+    })
+  }
+
+  editar(categoria, template: TemplateRef<any>){
+    this.form.controls["id"].setValue(categoria.id);
+    this.form.controls["nome"].setValue(categoria.nome);
+    this.form.controls["descricao"].setValue(categoria.descricao);
+    this.form.controls["foto"].setValue(categoria.foto);
+    this.openModal(template);
+  }
+
   submit() {
     this.spinner.show()
     let categoria: Categoria = new Categoria(this.form.value)
-    this.categoriaS.addCadategoria(this.usuario, categoria).then(() => {
-      this.spinner.hide()
-      this.toastr.success("Categoria cadastrado com sucesso!")
-      this.form.reset()
-    }).catch((e) => {
-      this.spinner.hide()
-      this.toastr.error("Não foi possivel cadastrar o categoria")
-    })
+    if(this.form.controls.id.value != null){
+      this.categoriaS.addCadategoria(this.usuario, categoria).then(() => {
+        this.spinner.hide()
+        this.toastr.success("Categoria cadastrado com sucesso!")
+        this.form.reset()
+      }).catch((e) => {
+        this.spinner.hide()
+        this.toastr.error("Não foi possivel cadastrar o categoria")
+      })
+    }else{
+      this.categoriaS.editCategoria(this.usuario, categoria).then(() => {
+        this.spinner.hide()
+        this.toastr.success("Categoria cadastrado com sucesso!")
+        this.form.reset()
+      }).catch((e) => {
+        this.spinner.hide()
+        this.toastr.error("Não foi possivel cadastrar o categoria")
+      })
+    }
+    
   }
 
 }
