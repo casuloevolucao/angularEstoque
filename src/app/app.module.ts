@@ -72,6 +72,7 @@ import { CategoriadesativadoComponent } from './admin/views/categoriadesativado/
   ],
   imports: [
     BrowserModule,
+    DataTablesModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     CommonModule,

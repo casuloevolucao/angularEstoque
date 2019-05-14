@@ -11,7 +11,7 @@ export class SidebarComponent implements OnInit {
 
   @Input() usuario:Usuario
 
-  notification:number = 0
+  notification:number
 
   usuariosNotificatio:Usuario[]
 
@@ -21,6 +21,12 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit() {
     this.messageS.getUsersMsg().subscribe((usuario:Usuario[])=>{
+      this.notification = 0
+      if(this.notification == 0){
+        usuario.forEach((value)=>{
+          this.notification += value.notification
+        })
+      }
       this.usuariosNotificatio = usuario
     })
   }

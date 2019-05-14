@@ -19,28 +19,28 @@
           <li class="dropdown notifications-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <i class="fa {{usuario.tipoUsuario == 0 ? 'fa-bell-o':'fa fa-comments'}}"></i>
-              <span *ngIf="usuario.notification > 0" class="label label-warning">{{usuario.notification}}</span>
+              <span *ngIf="usuario.notification > 0 && usuario.tipoUsuario == 1" class="label label-warning">{{usuario.notification}}</span>
+              <span *ngIf="notification > 0 && usuario.tipoUsuario == 0" class="label label-warning">{{notification}}</span>
             </a>
             <ul class="dropdown-menu">
               <li *ngIf="usuario.tipoUsuario == 1" class="header">
                 Você tem {{usuario.notification}} notificações</li>
               <li>
               <li *ngIf="usuario.tipoUsuario == 0 && notification" class="header">
-                Você tem {{notification.length}} notificações</li>
+                Você tem {{notification}} notificações</li>
               <li>
                 <!-- inner menu: contains the actual data -->
                 <ul class="menu">
                   <li>
-                    <a *ngIf="usuario.tipoUsuario == 1" (click)="initChat()">
+                    <a *ngIf="usuario.tipoUsuario == 1" (click)="initChat()" style="cursor: pointer">
                       <i class="fa fa-comments-o text-aqua"></i>  {{usuario.notification}} novas mensagens do Adminstrador
                     </a>
-                    <a *ngIf="usuario.tipoUsuario == 0" routerLink="/admin/chat">
-                      <i class="fa fa-comments-o text-aqua"></i> {{notification.length}} novas mensagens
+                    <a *ngIf="usuario.tipoUsuario == 0" routerLink="/admin/chat" style="cursor: pointer">
+                      <i class="fa fa-comments-o text-aqua"></i> {{notification}} novas mensagens
                     </a>
                   </li>
                 </ul>
               </li>
-              <li class="footer"><a href="#">View all</a></li>
             </ul>
           </li>
           <!-- User Account: style can be found in dropdown.less -->
