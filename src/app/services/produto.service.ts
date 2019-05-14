@@ -97,17 +97,26 @@ export class produtoService {
 
   //editar produtos
   editProduto(usuario:Usuario, produto:Produto){
-    return this.afs.ref(`produto/${produto.id}`).put(produto.foto).then((rs)=>{
-      rs.ref.getDownloadURL().then((url)=>{
-        this.af.collection("users").doc(usuario.uid).collection("produto").add({
-          nome: produto.nome,
-          descricao: produto.descricao,
-          foto: url,
-          esta_ativo:produto.esta_ativo,
-          dtCadastro:new Date()
+    if(produto.foto != null){
+      return this.afs.ref(`produto/${produto.id}`).put(produto.foto).then((rs)=>{
+        rs.ref.getDownloadURL().then((url)=>{
+          this.af.collection("users").doc(usuario.uid).collection("produto").doc(produto.id).update({
+            nome: produto.nome,
+            descricao: produto.descricao,
+            foto: url,
+            esta_ativo:produto.esta_ativo,
+            dtCadastro:new Date()
+          })
         })
       })
-    })
+    }else{
+      return this.af.collection("users").doc(usuario.uid).collection("produto").doc(produto.id).update({
+            nome: produto.nome,
+            descricao: produto.descricao,
+            esta_ativo:produto.esta_ativo,
+            dtCadastro:new Date()
+          })
+    }
   }
 
   //deletar produto

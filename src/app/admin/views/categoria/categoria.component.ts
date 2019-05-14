@@ -70,8 +70,8 @@ export class CategoriaComponent implements OnInit {
     this.img = (<HTMLInputElement>event.target).files[0]
   }
 
-  excluir(categoria){
-    this.categoriaS.deleteCategoria(this.usuario, categoria).then((result)=>{
+  desativar(categoria){
+    this.categoriaS.disableCategoria(this.usuario, categoria).then((result)=>{
       console.log(result)
       this.toastr.success("Categoria excluída com sucesso!")
     })

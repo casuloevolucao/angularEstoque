@@ -38,7 +38,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table class="table table-bordered table-hover" datatable [dtTrigger]="dtTrigger" [dtOptions]="dtOptions">
+              <table class="table table-bordered table-hover">
                 <thead>
                   <tr>
                     <th>Id</th>
@@ -57,7 +57,7 @@
                       [src]="categoria.foto != null ? categoria.foto : '../../../../assets//imgs/product.png'"></td>
                     <td>
                         <button (click)="editar(categoria, template)" type="button" class="btn btn-primary btn-sm">Editar</button>
-                        <button (click)="excluir(categoria)" type="button" class="btn btn-danger btn-sm">Excluir</button>
+                        <button (click)="desativar(categoria)" type="button" class="btn btn-danger btn-sm">Desativar</button>
                     </td>
                   </tr>
                 </tbody>
