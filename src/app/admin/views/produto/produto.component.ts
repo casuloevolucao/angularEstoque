@@ -10,6 +10,7 @@ import { CategoriaService } from 'src/app/services/categoria.service';
 import { Categoria } from 'src/app/models/categoria.model';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+import swal from 'sweetalert2'
 
 @Component({
   selector: 'app-produto',
@@ -99,6 +100,7 @@ export class ProdutoComponent implements OnInit {
         console.log(categoria)
       })    
     })
+    
 
   }
 
@@ -115,10 +117,22 @@ export class ProdutoComponent implements OnInit {
     this.img = (<HTMLInputElement>event.target).files[0]
     console.log(this.img)
   }
+  
+
+  desativar(usuario, produto){
+    swal.clickConfirm()
+    this.produtosS.disableProduto(usuario, produto).then(() => {
+      this.toastr.success("O Produto foi desativado!")
+    }).catch((e) => {
+      this.toastr.error("Não foi possivel desativar o produto")
+    })
+  }
 
   submit() {
     this.spinner.show()
-    let produto: Produto = new Produto(this.form.value)
+    let produto: Produto = new Produto(this.form.value) 
+    produto.foto = this.img
+    console.log(produto)
     this.produtosS.addProduto(this.usuario, produto).then(() => {
       this.spinner.hide()
       this.toastr.success("Produto cadastrado com sucesso!")

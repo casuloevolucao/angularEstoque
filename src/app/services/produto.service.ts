@@ -47,9 +47,9 @@ export class produtoService {
   }
 
   //adicionar produtos
-  async addProduto(usuario:Usuario, produto:Produto){
+  async addProduto(usuario:Usuario, produto:Produto){ 
     return new Promise((resolve, reject)=>{
-      if(usuario.foto != null){
+      if(produto.foto != null){
           this.af.collection("users").doc(usuario.uid).collection("produto").add({
           nome: produto.nome,
           descricao: produto.descricao,
@@ -82,7 +82,7 @@ export class produtoService {
           valorSaida: produto.valorSaida,
           categoria: produto.categoria,
           dtCadastro:new Date(),
-          foto:"",
+          foto: null,
           esta_ativo: true
         })
         .then((id)=>{
