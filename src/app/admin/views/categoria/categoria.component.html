@@ -1,3 +1,136 @@
-<p>
-  categoria works!
-</p>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        categorias
+        <small>Listagem de Categorias</small>
+      </h1>
+  
+      <!-- EDITAR ROTAS -->
+      <ol class="breadcrumb">
+        <li><a routerLink="/admin"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a routerLink="/admin/categorias">Produtos</a></li>
+        <li class="active">Todos as categorias</li>
+      </ol>
+    </section>
+  
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-header">
+              <div class="row">
+                  <div class="col-12 col-md-8">
+                    <h3 class="box-title">Todos as categorias</h3>
+                  </div>
+              </div>
+              <div class="row" style="margin: 20px;">
+                <div class="pull-left">
+                  <h5>Mais Ações</h5>
+                  <a routerLink="/admin/categoriasDesativadas" class="btn btn-danger">Categorias Desativados</a>
+                </div>
+                <div class="pull-right">
+                  <button type="button" class="btn btn-success" (click)="openModal(template)">Cadastrar</button>
+                </div>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table class="table table-bordered table-hover" datatable [dtTrigger]="dtTrigger" [dtOptions]="dtOptions">
+                <thead>
+                  <tr>
+                    <th>Id</th>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>Foto</th>
+                    <th>Ação</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let categoria of categorias;">
+                    <td>{{categoria.id}}</td>
+                    <td>{{categoria.nome}}</td>
+                    <td>{{categoria.descricao}}</td>
+                    <td><img height="50px" width="50px" 
+                      [src]="categoria.foto != null ? categoria.foto : '../../../../assets//imgs/product.png'"></td>
+                    <td>
+                        <button (click)="editar(categoria, template)" type="button" class="btn btn-primary btn-sm">Editar</button>
+                        <button (click)="excluir(categoria)" type="button" class="btn btn-danger btn-sm">Excluir</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  
+  <!-- Modal de Cadastro -->
+  <ng-template #template>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Cadastrar categorias</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- Formulario de Cadastro -->
+      <div class="register-box-body">
+  
+        <form [formGroup]="form" (ngSubmit)="submit()">
+          <div class="form-group has-feedback">
+            <input formControlName="nome" type="text" class="form-control" placeholder="Nome do categoria">
+            <span class="fa fa-cubes form-control-feedback"></span>
+            <div *ngIf="form.get('nome').invalid && (form.get('nome').dirty || form.get('nome').touched)"
+              class="alert alert-danger">
+              <div *ngIf="form.get('nome').hasError('required')">
+                O campo é requerido!
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group has-feedback">
+            <input formControlName="descricao" type="text" class="form-control" placeholder="Descrição">
+            <span class="fa fa-pencil-square form-control-feedback"></span>
+            <div *ngIf="form.get('descricao').invalid && (form.get('descricao').dirty || form.get('descricao').touched)"
+              class="alert alert-danger">
+              <div *ngIf="form.get('descricao').hasError('required')">
+                O campo é requerido!
+              </div>
+            </div>
+          </div>
+  
+          <div class="form-group has-feedback">
+              <input formControlName="foto" (change)="capturarImg($event)" type="file" class="form-control" placeholder="Foto do categoria">
+              <span class="fa fa-file-image-o form-control-feedback"></span>
+              <div
+                *ngIf="form.get('foto').invalid && (form.get('foto').dirty || form.get('foto').touched)"
+                class="alert alert-danger">
+                <div *ngIf="form.get('foto').hasError('required')">
+                  O campo é requerido!
+                </div>
+              </div>
+            </div>
+          <div class="row">
+            <!-- /.col -->
+            <div class="pull-right">
+              <button type="submit" class="btn btn-primary btn-block btn-flat"
+                [disabled]="!form.valid" (click)="modalRef.hide()">Cadastrar categoria</button>
+            </div>
+            <!-- /.col -->
+          </div>
+        </form>
+      </div>
+      <!-- /.form-box -->
+    </div>
+  </ng-template>

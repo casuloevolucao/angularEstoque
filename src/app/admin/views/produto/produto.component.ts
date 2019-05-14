@@ -10,7 +10,8 @@ import { CategoriaService } from 'src/app/services/categoria.service';
 import { Categoria } from 'src/app/models/categoria.model';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+import { Template } from '@angular/compiler/src/render3/r3_ast';
 
 @Component({
   selector: 'app-produto',
@@ -37,6 +38,7 @@ export class ProdutoComponent implements OnInit {
   img: File;
 
   form: FormGroup = new FormGroup({
+    "id": new FormControl(null, []),
     "categoria": new FormControl("", [Validators.required]),
     "nome": new FormControl("", [Validators.required]),
     "quantidade": new FormControl("", [Validators.required, Validators.min(1)]),
@@ -85,23 +87,19 @@ export class ProdutoComponent implements OnInit {
       pageLength: 5,
       processing: true
     }
-    this.usuarioS.currentUser().then((user: Usuario) => {
+    this.usuarioS.currentUser().subscribe((user: Usuario) => {
       this.usuario = user
       this.produtosS.getData(user).subscribe((produtos: Produto[]) => {
         this.produtos = produtos
 
       })
-
       this.categoriaS.getData(user).subscribe((categorias: Categoria[]) => {
         this.categorias = categorias
-        console.log(categorias)
       })
       this.categoriaS.getData(user).subscribe((categoria:Categoria[])=>{
-        console.log(categoria)
       })    
     })
     
-
   }
 
   ngOnDestroy() {
@@ -113,21 +111,55 @@ export class ProdutoComponent implements OnInit {
     this.modalRef = this.modalService.show(template);
   }
 
-  public capturarImg(event: Event): void {
+  capturarImg(event: Event): void {
     this.img = (<HTMLInputElement>event.target).files[0]
-    console.log(this.img)
   }
   
+  editarProduto(produto, template: TemplateRef<any>){
+    this.form.patchValue({
+      id:produto.id,
+      nome:produto.nome,
+      descricao:produto.descricao,
+      foto:produto.foto,
+    })
+    /*this.form.controls["id"].setValue(categoria.id);
+    this.form.controls["nome"].setValue(categoria.nome);
+    this.form.controls["descricao"].setValue(categoria.descricao);
+    this.form.controls["foto"].setValue(categoria.foto);*/
+    this.openModal(template);
+  }
+  // editarProduto(template, usuario, produto){
+  //   this.produtosS.editProduto(usuario, produto);{
+  //     this.form.patchValue({
+  //       id: produto.id,
+  //       nome: produto.nome,
+  //       descricao: produto.descricao,
+  //       url: produto.url
+  //     })
+  //   };
+  //   this.modalRef = this.modalService.show(template);
+  // }
 
-  desativar(usuario, produto){
-    swal.clickConfirm()
-    this.produtosS.disableProduto(usuario, produto).then(() => {
-      this.toastr.success("O Produto foi desativado!")
-    }).catch((e) => {
-      this.toastr.error("Não foi possivel desativar o produto")
+  // Desativar produto
+  desativarProduto(usuario, produto){
+    Swal.fire({
+      title: 'Tem certeza ue deseja desativar este produto?',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sim',
+      cancelButtonText: 'Cancelar'
+    }).then(result => {
+      if(result.value){
+        Swal.fire({
+          title: "Produto desativado com sucesso!",
+          type: 'success'
+        })
+        this.produtosS.disableProduto(usuario, produto)
+      }
     })
   }
 
+  // Cadastrar Produto
   submit() {
     this.spinner.show()
     let produto: Produto = new Produto(this.form.value) 

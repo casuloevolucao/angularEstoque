@@ -44,6 +44,8 @@ import { NotfoundComponent } from './admin/erros/notfound/notfound.component';
 import { NotuthorizationComponent } from './admin/erros/notuthorization/notuthorization.component';
 import { ChatComponent } from './admin/views/chat/chat.component';
 import { MessagemService } from './services/messagem.service';
+import { ProdutosdesativadoComponent } from './admin/views/produtosdesativado/produtosdesativado.component';
+import { CategoriadesativadoComponent } from './admin/views/categoriadesativado/categoriadesativado.component';
 
 @NgModule({
   declarations: [
@@ -65,9 +67,12 @@ import { MessagemService } from './services/messagem.service';
     NotfoundComponent,
     NotuthorizationComponent,
     ChatComponent,
+    ProdutosdesativadoComponent,
+    CategoriadesativadoComponent,
   ],
   imports: [
     BrowserModule,
+    DataTablesModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     CommonModule,

@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.usuarioS.currentUser().then((user:Usuario)=>{
+    this.usuarioS.currentUser().subscribe((user:Usuario)=>{
       this.usuario = user
     })
     this.usuarioS.getUsersOnline().subscribe((online:Usuario[])=>{
