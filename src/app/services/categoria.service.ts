@@ -48,7 +48,7 @@ export class CategoriaService {
 
   //adicionar categorias
   async addCadategoria(usuario:Usuario, categoria:Categoria){
-    if(categoria.foto){
+    if(categoria.foto != null){
       return  this.af.collection("users").doc(usuario.uid).collection("categoria").add({
         nome: categoria.nome,
         descricao: categoria.descricao,

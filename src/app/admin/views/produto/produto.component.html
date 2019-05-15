@@ -39,7 +39,7 @@
           </div>
           <!-- /.box-header -->
           <div class="box-body">
-            <table class="table table-bordered table-hover">
+            <table class="table table-bordered table-hover" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
               <thead>
                 <tr> 
                   <th>Id</th>
@@ -61,17 +61,14 @@
                   <td>{{produto.nome}}</td>
                   <td>{{produto.quantidade}}</td>
                   <td>
-                    <div *ngIf="produto.quantidade >= 0 && produto.quantidade <=10 ; else elseBlock">
-                      <div *ngIf="produto.quantidade > 6 && produto.quantidade < 10 ; else elseBlock">
-                        <span class="description-percentage text-orange"><i class="fa fa-caret-left"></i> Atenção</span>
-                      </div>
-                      <ng-template #elseBlock>
-                        <span class="description-percentage text-orange"><i class="fa fa-caret-down"></i> Baixo</span>
-                      </ng-template>
-                    </div>
-                    <ng-template #elseBlock>
-                        <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> Normal</span>
-                    </ng-template>
+                  <span 
+                  [class]="produto.quantidade >=6 && produto.quantidade <= 10 ? 'description-percentage text-orange': 
+                  produto.quantidade == 0  ? 'description-percentage text-red':'description-percentage text-green'
+                    "><i [class]="produto.quantidade >=6 && produto.quantidade <= 10 ? 'fa fa-caret-left': 
+                      produto.quantidade == 0  ? 'fa fa-caret-down':'fa fa-caret-up'">
+                    </i> {{produto.quantidade == 0 ? 'Fora de estoque':
+                        produto.quantidade >= 6 && produto.quantidade <=10 ? 'Normal':'Aceitável'}}</span>
+                    
                   </td>
                   <td>{{produto.descricao}}</td>
                   <td><img height="50px" width="50px"
@@ -79,9 +76,9 @@
                   <td>{{produto.valorEntrada}}</td>
                   <td>{{produto.valorSaida}}</td>
                   <td>
-                    <button type="submit" class="btn btn-primary btn-block btn-flat"
+                    <button class="btn btn-primary btn-block btn-flat"
                     (click)="editarProduto(produto, template)">Editar</button>
-                    <button type="submit" class="btn btn-danger btn-block btn-flat" (click)="desativarProduto(usuario, produto)">Desativar</button>
+                    <button class="btn btn-danger btn-block btn-flat" (click)="desativarProduto(usuario, produto)">Desativar</button>
                   </td>
                 </tr>
               </tbody>
@@ -102,8 +99,8 @@
 <!-- Modal de Cadastro -->
 <ng-template #template>
   <div class="modal-header">
-    <h4 class="modal-title pull-left">Cadastrar produtos</h4>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+    <h4 class="modal-title pull-left"> {{form.value.id != null ? 'Editar produto':'Cadastrar produtos'}}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide(); form.reset()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -198,7 +195,7 @@
           <!-- /.col -->
           <div class="pull-right">
             <button type="submit" class="btn btn-primary btn-block btn-flat" [disabled]="!form.valid"
-              (click)="modalRef.hide()">Cadastrar produto</button>
+              (click)="modalRef.hide()">{{form.value.id != null ? 'Editar produto':'Cadastrar produtos'}}</button>
           </div>
           <!-- /.col -->
         </div>

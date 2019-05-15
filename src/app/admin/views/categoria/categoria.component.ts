@@ -84,17 +84,13 @@ export class CategoriaComponent implements OnInit {
       descricao:categoria.descricao,
       nofotome:categoria.foto,
     })
-    /*this.form.controls["id"].setValue(categoria.id);
-    this.form.controls["nome"].setValue(categoria.nome);
-    this.form.controls["descricao"].setValue(categoria.descricao);
-    this.form.controls["foto"].setValue(categoria.foto);*/
     this.openModal(template);
   }
 
   submit() {
     this.spinner.show()
     let categoria: Categoria = new Categoria(this.form.value)
-    if(this.form.controls.id.value == null){
+    if(this.form.value.id == null){
       this.categoriaS.addCadategoria(this.usuario, categoria).then(() => {
         this.spinner.hide()
         this.toastr.success("Categoria cadastrado com sucesso!")

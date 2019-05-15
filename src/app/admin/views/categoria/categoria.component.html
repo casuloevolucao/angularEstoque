@@ -78,8 +78,8 @@
   <!-- Modal de Cadastro -->
   <ng-template #template>
     <div class="modal-header">
-      <h4 class="modal-title pull-left">Cadastrar categorias</h4>
-      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <h4 class="modal-title pull-left">{{form.value.id != null ? 'Editar categoria':'Cadastrar categorias'}}</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide(); form.reset()">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -125,7 +125,7 @@
             <!-- /.col -->
             <div class="pull-right">
               <button type="submit" class="btn btn-primary btn-block btn-flat"
-                [disabled]="!form.valid" (click)="modalRef.hide()">Cadastrar categoria</button>
+                [disabled]="!form.valid" (click)="modalRef.hide()">{{form.value.id != null ? 'Editar categoria':'Cadastrar categorias'}}</button>
             </div>
             <!-- /.col -->
           </div>

@@ -38,12 +38,13 @@ export class ProdutoComponent implements OnInit {
   img: File;
 
   form: FormGroup = new FormGroup({
-    "id": new FormControl(null, []),
+    "id": new FormControl(null, ),
     "categoria": new FormControl("", [Validators.required]),
     "nome": new FormControl("", [Validators.required]),
-    "quantidade": new FormControl("", [Validators.required, Validators.min(1)]),
+    "quantidade": new FormControl("", [Validators.required,]),
     "descricao": new FormControl("", [Validators.required]),
-    "foto": new FormControl("", [Validators.required]),
+    "foto": new FormControl("", ),
+    "esta_ativo": new FormControl(""),
     "valorEntrada": new FormControl("", [Validators.required, Validators.min(1)]),
     "valorSaida": new FormControl("", [Validators.required, Validators.min(1)]),
   })
@@ -117,28 +118,18 @@ export class ProdutoComponent implements OnInit {
   
   editarProduto(produto, template: TemplateRef<any>){
     this.form.patchValue({
-      id:produto.id,
-      nome:produto.nome,
-      descricao:produto.descricao,
-      foto:produto.foto,
+      id: produto.id,
+      nome: produto.nome,
+      quantidade: produto.quantidade,
+      descricao: produto.descricao,
+      esta_ativo: produto.esta_ativo,
+      categoria: produto.categoria,
+      foto: produto.foto,
+      valorEntrada: produto.valorEntrada,
+      valorSaida: produto.valorSaida
     })
-    /*this.form.controls["id"].setValue(categoria.id);
-    this.form.controls["nome"].setValue(categoria.nome);
-    this.form.controls["descricao"].setValue(categoria.descricao);
-    this.form.controls["foto"].setValue(categoria.foto);*/
     this.openModal(template);
   }
-  // editarProduto(template, usuario, produto){
-  //   this.produtosS.editProduto(usuario, produto);{
-  //     this.form.patchValue({
-  //       id: produto.id,
-  //       nome: produto.nome,
-  //       descricao: produto.descricao,
-  //       url: produto.url
-  //     })
-  //   };
-  //   this.modalRef = this.modalService.show(template);
-  // }
 
   // Desativar produto
   desativarProduto(usuario, produto){
@@ -165,14 +156,26 @@ export class ProdutoComponent implements OnInit {
     let produto: Produto = new Produto(this.form.value) 
     produto.foto = this.img
     console.log(produto)
-    this.produtosS.addProduto(this.usuario, produto).then(() => {
-      this.spinner.hide()
-      this.toastr.success("Produto cadastrado com sucesso!")
-      this.form.reset()
-    }).catch((e) => {
-      this.spinner.hide()
-      this.toastr.error("Não foi possivel cadastrar o produto")
-    })
+    if(produto.id != null){
+      this.produtosS.editProduto(this.usuario, produto).then(() => {
+        this.spinner.hide()
+        this.toastr.success(`Produto ${produto.nome} atualizado com sucesso!!`)
+        this.form.reset()
+        this.ngOnInit()
+      }).catch((e) => {
+        this.spinner.hide()
+        this.toastr.error("Não foi possivel editar o produto")
+      })
+    }else{
+      this.produtosS.addProduto(this.usuario, produto).then(() => {
+        this.spinner.hide()
+        this.toastr.success("Produto cadastrado com sucesso!")
+        this.form.reset()
+        this.ngOnInit()
+      }).catch((e) => {
+        this.spinner.hide()
+        this.toastr.error("Não foi possivel cadastrar o produto")
+      })
+    }
   }
-
 }
