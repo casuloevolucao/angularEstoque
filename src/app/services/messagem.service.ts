@@ -92,17 +92,23 @@ export class MessagemService {
   //manda notificação para o cliente do sistema
   sendNotificationAdmin(parter:Usuario){
     this.af.collection('users').doc(parter.uid).valueChanges().subscribe((notif:Usuario)=>{
-      this.contNotification = notif.notification
+      if(this.contNotification == 0){
+        this.contNotification = notif.notification
+      }
     })
     this.af.collection('users').doc(parter.uid).update({
       notification: this.contNotification += 1
+    }).then(()=>{
+      this.contNotification = 0
     })
   }
 
   //manda notificação para o admin do sistema
   sendNotificationClient(current:Usuario){
     this.af.collection('users').doc(this.adminUid).collection("notification").doc(current.uid).valueChanges().subscribe((notif:Usuario)=>{
-      this.contNotification = notif.notification     
+      if(this.contNotification == 0){
+        this.contNotification = notif.notification  
+      }   
     })
     this.af.collection('users').doc(this.adminUid).collection("notification").doc(current.uid).set({
       uid: current.uid,
@@ -113,6 +119,8 @@ export class MessagemService {
       tipoUsuario: 1,
       dtCadastro: current.dtCadastro,
       notification: this.contNotification += 1
+    }).then(()=>{
+      this.contNotification = 0    
     })
   }
 
