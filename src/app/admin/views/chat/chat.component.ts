@@ -5,6 +5,8 @@ import { Usuario } from 'src/app/models/usuario.model';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Messagem } from 'src/app/models/messagem.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import 'rxjs/add/operator/map';
+import { DataTableDirective } from 'angular-datatables';
 
 @Component({
   selector: 'app-chat',
@@ -23,7 +25,9 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   usuarios:Usuario[] = new Array<Usuario>()
 
   //option da tabela
-  dtOptions:DataTables.Settings = {}
+  @ViewChild(DataTableDirective)
+  dtElement: DataTableDirective;
+  dtOptions: DataTables.Settings = {};
   
   //controlado de dados da tabela
   dtTrigger: Subject<any> = new Subject();
@@ -79,7 +83,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     }
     this.messageS.getUsersMsg().subscribe((users:Usuario[])=>{
       this.usuarios = users
-      this.dtTrigger.next(users)
+      this.rerender()
     })
     this.usuarioS.currentUser().subscribe((user:Usuario)=>{
       this.usuario = user
@@ -87,10 +91,23 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     this.scrollToBottom();
   }
 
+  ngAfterViewInit(){
+    this.dtTrigger.next()
+  }
+
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      // Destrui tabela primeiro
+      dtInstance.destroy();
+      // Chamar o dtTrigger para rerenderizar novamente
+      this.dtTrigger.next();
+    });
+  }
+
   ngOnDestroy() {
     this.dtTrigger.unsubscribe();
   }
-  
+
   ngAfterViewChecked() {        
     this.scrollToBottom();        
   } 

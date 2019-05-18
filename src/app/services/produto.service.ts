@@ -31,6 +31,11 @@ export class produtoService {
     )
   }
 
+  //pegar as produtos ativos
+  getProductRegistre(usuario:Usuario){
+    return this.af.collection("users").doc(usuario.uid).collection("produto").valueChanges()
+  }
+
   //pegar as produtos desativados
   getDataDisable(usuario:Usuario){
     return this.af.collection("users").doc(usuario.uid).collection("produto", ref => ref.where("esta_ativo", "==", false).orderBy("dtCadastro"))
@@ -47,9 +52,9 @@ export class produtoService {
   }
 
   //adicionar produtos
-  async addProduto(usuario:Usuario, produto:Produto){
+  async addProduto(usuario:Usuario, produto:Produto){ 
     return new Promise((resolve, reject)=>{
-      if(usuario.foto != null){
+      if(produto.foto != null){
           this.af.collection("users").doc(usuario.uid).collection("produto").add({
           nome: produto.nome,
           descricao: produto.descricao,
@@ -82,7 +87,7 @@ export class produtoService {
           valorSaida: produto.valorSaida,
           categoria: produto.categoria,
           dtCadastro:new Date(),
-          foto:"",
+          foto: null,
           esta_ativo: true
         })
         .then((id)=>{
@@ -97,17 +102,32 @@ export class produtoService {
 
   //editar produtos
   editProduto(usuario:Usuario, produto:Produto){
-    return this.afs.ref(`produto/${produto.id}`).put(produto.foto).then((rs)=>{
-      rs.ref.getDownloadURL().then((url)=>{
-        this.af.collection("users").doc(usuario.uid).collection("produto").add({
-          nome: produto.nome,
-          descricao: produto.descricao,
-          foto: url,
-          esta_ativo:produto.esta_ativo,
-          dtCadastro:new Date()
+    if(produto.foto != null){
+      return this.afs.ref(`produto/${produto.id}`).put(produto.foto).then((rs)=>{
+        rs.ref.getDownloadURL().then((url)=>{
+          this.af.collection("users").doc(usuario.uid).collection("produto").doc(produto.id).update({
+            nome: produto.nome,
+            descricao: produto.descricao,
+            foto: url,
+            esta_ativo:produto.esta_ativo,
+            dtCadastro:new Date()
+          })
         })
       })
-    })
+    }else{
+      return this.af.collection("users").doc(usuario.uid).collection("produto").doc(produto.id).update({
+          nome: produto.nome,
+          descricao: produto.descricao,
+          esta_ativo:produto.esta_ativo,
+          quantidade: produto.quantidade,
+          valorEntrada: produto.valorEntrada,
+          valorSaida: produto.valorSaida,
+          categoria: produto.categoria,
+          foto:null,
+        }).then(()=>{
+          this.afs.ref(`produto/${produto.id}`).delete()
+        })
+    }
   }
 
   //deletar produto

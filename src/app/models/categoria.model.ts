@@ -7,4 +7,5 @@ export class Categoria {
     descricao: string
     foto: File | string
     esta_ativo: boolean
+    dtCadastro:Date
 }

@@ -13,9 +13,12 @@ import { AngularFireStorageModule } from "@angular/fire/storage";
 import { ReactiveFormsModule } from "@angular/forms";
 import { DataTablesModule } from 'angular-datatables';
 import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+registerLocaleData(localePt);
+
+//ngx-bootstrap
 import { ModalModule } from 'ngx-bootstrap/modal'; 
-import ptBr from '@angular/common/locales/pt';
-registerLocaleData(ptBr)
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 //Services
 import { AuthGuardService } from './services/auth-guard.service';
@@ -46,6 +49,7 @@ import { ChatComponent } from './admin/views/chat/chat.component';
 import { MessagemService } from './services/messagem.service';
 import { ProdutosdesativadoComponent } from './admin/views/produtosdesativado/produtosdesativado.component';
 import { CategoriadesativadoComponent } from './admin/views/categoriadesativado/categoriadesativado.component';
+import { PerfilComponent } from './admin/views/perfil/perfil.component';
 
 @NgModule({
   declarations: [
@@ -69,9 +73,11 @@ import { CategoriadesativadoComponent } from './admin/views/categoriadesativado/
     ChatComponent,
     ProdutosdesativadoComponent,
     CategoriadesativadoComponent,
+    PerfilComponent,
   ],
   imports: [
     BrowserModule,
+    DataTablesModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     CommonModule,
@@ -83,10 +89,11 @@ import { CategoriadesativadoComponent } from './admin/views/categoriadesativado/
     AngularFirestoreModule,
     AngularFireStorageModule,
     ReactiveFormsModule,
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    //BsDatepickerModule.forRoot()
   ],
   providers: [
-    { provide: LOCALE_ID, useValue: 'pt' },
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
     AuthGuardService,
     LoginService,
     UsuarioService,
