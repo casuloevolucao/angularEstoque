@@ -6,6 +6,8 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { LoginService } from 'src/app/services/login.service';
+import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-perfil',
@@ -37,6 +39,7 @@ export class PerfilComponent implements OnInit {
     private modalService: BsModalService,
     private spinner: NgxSpinnerService,
     private toastr: ToastrService,
+    private router:Router
   ) { }
 
   ngOnInit() {
@@ -58,6 +61,27 @@ export class PerfilComponent implements OnInit {
     this.img = (<HTMLInputElement>event.target).files[0]
   }
   
+  deletar(){
+    Swal.fire({
+      title: `Tem certeza que deseja deletar sua conta ${this.usuario.nome} ?`,
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sim',
+      cancelButtonText: 'Cancelar'
+    }).then(result => {
+      if(result.value){
+        this.usuarioS.deleteUser().then(()=>{
+          Swal.fire({
+            title: "Conta deletada com sucesso :) Ate Aproxima!",
+            type: 'success'
+          }).then(()=>{
+            this.router.navigate(["/"])
+          })
+        })
+      }
+    })
+  }
+
   submit(){
     let usuario:Usuario = new Usuario(this.form.value)
     usuario.foto = this.img

@@ -37,10 +37,13 @@ export class UsuarioService {
   }  
 
   //deletar usuario
-  async desativateUser(){
+  async deleteUser(){
     return this.afa.authState.subscribe((user)=>{
-      user.delete()
-      this.af.collection("users").doc(user.uid).delete()
+      user.delete().then(()=>{
+        this.af.collection("users").doc(user.uid).delete()
+        this.afs.ref(`users/${user.uid}`).delete()
+        localStorage.clear()
+      })
     })
   }
 
