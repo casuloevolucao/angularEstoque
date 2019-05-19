@@ -93,13 +93,11 @@ export class MessagemService {
   sendNotificationAdmin(parter:Usuario){
     this.af.collection('users').doc(parter.uid).valueChanges().subscribe((notif:Usuario)=>{
       if(this.contNotification == 0){
-        this.contNotification = notif.notification
+        this.contNotification += notif.notification
       }
     })
     this.af.collection('users').doc(parter.uid).update({
       notification: this.contNotification += 1
-    }).then(()=>{
-      this.contNotification = 0
     })
   }
 
@@ -107,7 +105,7 @@ export class MessagemService {
   sendNotificationClient(current:Usuario){
     this.af.collection('users').doc(this.adminUid).collection("notification").doc(current.uid).valueChanges().subscribe((notif:Usuario)=>{
       if(this.contNotification == 0){
-        this.contNotification = notif.notification  
+        this.contNotification += notif.notification  
       }   
     })
     this.af.collection('users').doc(this.adminUid).collection("notification").doc(current.uid).set({
@@ -119,8 +117,6 @@ export class MessagemService {
       tipoUsuario: 1,
       dtCadastro: current.dtCadastro,
       notification: this.contNotification += 1
-    }).then(()=>{
-      this.contNotification = 0    
     })
   }
 

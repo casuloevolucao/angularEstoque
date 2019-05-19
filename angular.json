@@ -32,6 +32,7 @@
               "node_modules/admin-lte/dist/css/AdminLTE.min.css",
               "node_modules/admin-lte/dist/css/skins/_all-skins.min.css",
               "node_modules/morris.js/morris.css",
+              "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
               "src/styles.css"
             ],
             "scripts": [

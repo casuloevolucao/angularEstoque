@@ -29,8 +29,19 @@ export class RelatorioService {
   }
 
   search(usuario:Usuario, mesInicio:Date, mesFim:Date){
-    return this.af.collection("users").doc(usuario.uid)
-    .collection("produto", ref => ref.where('esta_ativo', '==', true).where('dtCadastro', '>=', mesInicio).where('dtCadastro', '<=', mesFim).orderBy('dtCadastro')).valueChanges()
+    return new Promise((resolve, reject)=>{
+      this.af.collection("users").doc(usuario.uid).collection("produto", ref => ref.where('esta_ativo', '==', true)
+      .where('dtCadastro', '>=', mesInicio)
+      .where('dtCadastro', '<=', mesFim).orderBy('dtCadastro')).valueChanges().subscribe(
+        (rs)=>{
+          console.log(rs)
+        resolve(rs)
+        },
+        (error)=>{
+          reject(error)
+        }
+      )
+    })
   }
 
   async generatePdfByMonth(produtos:Produto[], mesInicio:Date, mesFim:Date){
@@ -58,7 +69,7 @@ export class RelatorioService {
               }
             }
           };
-          pdfMake.createPdf(pdf).download(`relatorio ${mesInicio.toLocaleDateString('pt')} a ${mesFim.toLocaleDateString('pt')}.pdf`);
+          //pdfMake.createPdf(pdf).download(`relatorio ${mesInicio.toLocaleDateString('pt')} a ${mesFim.toLocaleDateString('pt')}.pdf`);
           resolve(pdfMake.createPdf(pdf).download(`relatorio ${mesInicio.toLocaleDateString('pt')} a ${mesFim.toLocaleDateString('pt')}.pdf`))
       })
   }

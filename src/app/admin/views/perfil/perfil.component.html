@@ -1,3 +1,119 @@
-<p>
-  perfil works!
-</p>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper" *ngIf="usuario">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <h1>
+      Perfil
+      <small>Perfil do usuário</small>
+    </h1>
+    <ol class="breadcrumb">
+      <li><a routerLink="/admin"><i class="fa fa-dashboard"></i> Home</a></li>
+      <li class="active">Perfil</li>
+    </ol>
+  </section>
+  <!-- Main content -->
+  <section class="content">
+    <!-- Default box -->
+    <div class="box">
+      <div class="box-header with-border">
+        <h3 class="box-title">Perfil</h3>
+      </div>
+      <div class="box-body">
+        <!-- Profile Image -->
+        <div class="box box-primary">
+          <div class="box-body box-profile">
+            <img class="profile-user-img img-responsive img-circle" [src]="usuario.foto != null ? usuario.foto : '../../../../assets/imgs/product.png'">
+
+            <h3 class="profile-username text-center">{{usuario.nome}}</h3>
+
+            <p class="text-muted text-center">{{usuario.tipoUsuario == 0 ? 'Administrador':'Usuário'}}</p>
+
+            <form [formGroup]="form" (ngSubmit)="openModal(confirm)">
+              <div class="form-group has-feedback">
+                <input formControlName="nome" type="text" class="form-control" placeholder="Nome completo">
+                <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                <div *ngIf="form.get('nome').invalid && (form.get('nome').dirty || form.get('nome').touched)" class="alert alert-danger">
+                  <div *ngIf="form.get('nome').hasError('required')">
+                    O campo é requerido!
+                  </div>
+                </div>
+              </div>
+              <div class="form-group has-feedback">
+                <input formControlName="email" type="email" class="form-control" placeholder="E-mail">
+                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                <div *ngIf="form.get('email').invalid && (form.get('email').dirty || form.get('email').touched)" class="alert alert-danger">
+                  <div *ngIf="form.get('email').hasError('required')">
+                    O campo é requerido!
+                  </div>
+                  <div *ngIf="form.get('email').hasError('email')">
+                    Email inválido!
+                  </div>
+                </div>
+              </div>
+              <div class="form-group has-feedback">
+                <input formControlName="foto" (change)="capturarImg($event)" type="file" class="form-control">
+                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                <div *ngIf="form.get('foto').invalid && (form.get('foto').dirty || form.get('foto').touched)" class="alert alert-danger">
+                  <div *ngIf="form.get('foto').hasError('required')">
+                    O campo é requerido!
+                  </div>
+                </div>
+              </div>
+              <div class="form-group has-feedback">
+                <input formControlName="senha" type="password" class="form-control" placeholder="Nova Senha">
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                <div *ngIf="form.get('senha').invalid && (form.get('senha').dirty || form.get('senha').touched)" class="alert alert-danger">
+                
+                  <div *ngIf="form.get('senha').hasError('required')">
+                    O campo é requerido!
+                  </div>
+                  <div *ngIf="form.get('senha').hasError('minlength')">
+                    Minimo 6 caracteres!
+                  </div>
+                </div>
+              </div>
+              <button type="submit" [disabled]="!form.valid" class="btn btn-primary btn-block"><b>Salvar Alterações</b></button>
+            </form>
+          </div>
+          <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+      </div>
+    </div>
+    <!-- /.box -->
+  </section>
+  <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+<ng-template #confirm>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Por motivos de Segurança Digite sua senha atual</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide();">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form [formGroup]="formConfirm" (ngSubmit)="submit()">
+    <div class="modal-body">
+      <div class="form-group has-feedback">
+        <input formControlName="senha" type="password" class="form-control" placeholder="Senha Atual">
+        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+        <div *ngIf="formConfirm.get('senha').invalid && (formConfirm.get('senha').dirty || formConfirm.get('senha').touched)" class="alert alert-danger">
+        
+          <div *ngIf="formConfirm.get('senha').hasError('required')">
+            O campo é requerido!
+          </div>
+          <div *ngIf="formConfirm.get('senha').hasError('minlength')">
+            Minimo 6 caracteres!
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="pull-right">
+        <button type="submit" class="btn btn-primary btn-block btn-flat" [disabled]="!formConfirm.valid">
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </form>
+</ng-template>

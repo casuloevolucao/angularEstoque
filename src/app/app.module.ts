@@ -90,7 +90,7 @@ import { PerfilComponent } from './admin/views/perfil/perfil.component';
     AngularFireStorageModule,
     ReactiveFormsModule,
     ModalModule.forRoot(),
-    //BsDatepickerModule.forRoot()
+    BsDatepickerModule.forRoot()
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'pt-BR' },

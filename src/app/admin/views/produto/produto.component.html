@@ -30,7 +30,7 @@
               <div class="pull-left">
                 <h5>Mais Ações</h5>
                 <a routerLink="/admin/produtosDesativados" class="btn btn-danger">Produtos Desativados</a>
-                <button type="button" class="btn btn-secondary" (click)="openModalRelatorio(relatorio)">Exportar Relátorio de Produtos</button>
+                <button type="button" class="btn btn-secondary" (click)="openModalRelatorio(search)">Exportar Relátorio de Produtos</button>
               </div>
               <div class="pull-right">
                 <button type="button" class="btn btn-success" (click)="openModal(editar)">Cadastrar</button>
@@ -204,29 +204,55 @@
   </div>
 </ng-template>
 
-<ng-template #relatorio>
+<ng-template #search>
   <div class="modal-header">
     <h4 class="modal-title pull-left"> Exportar Relátorio por Data de Cadastro</h4>
     <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide();">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  <div class="modal-body">
-    <form [formGroup]="relatorio" (ngSubmit)="pesquisar()">
-      <div class="form-group">
+  <form [formGroup]="relatorio" (ngSubmit)="pesquisar()">
+    <div class="modal-body">
+      <div class="form-group has-feedback">
         <label>Data Inicio</label>
+        <input 
+          type="text"
+          class="form-control"
+          autocomplete="off"
+          bsDatepicker
+          formControlName="dateInicio"
+          [bsConfig]="datePickerConfig">
+          <div
+            *ngIf="relatorio.get('dateInicio').invalid && (relatorio.get('dateInicio').dirty || relatorio.get('dateInicio').touched)"
+            class="alert alert-danger">
+            <div *ngIf="relatorio.get('dateInicio').hasError('required')">
+              O campo é requerido!
+            </div>
+          </div>
       </div>
-      <div class="form-group">
+      <div class="form-group has-feedback">
         <label>Data Fim</label>
-    
+        <input type="text"
+          class="form-control"
+          autocomplete="off"
+          bsDatepicker
+          formControlName="dateFim"
+          [bsConfig]="datePickerConfig">
+          <div
+            *ngIf="relatorio.get('dateFim').invalid && (relatorio.get('dateFim').dirty || relatorio.get('dateFim').touched)"
+            class="alert alert-danger">
+            <div *ngIf="relatorio.get('dateFim').hasError('required')">
+              O campo é requerido!
+            </div>
+          </div>
+      </div> 
+    </div>
+    <div class="modal-footer">
+      <div class="pull-right">
+        <button type="submit" class="btn btn-primary btn-block btn-flat" [disabled]="!relatorio.valid">
+          Pesquisar..
+        </button>
       </div>
-      <div class="form-row">
-        <div class="pull-right">
-          <button type="submit" class="btn btn-primary btn-block btn-flat" [disabled]="!relatorio.valid">
-            Pesquisar..
-          </button>
-        </div>
-      </div>
-    </form>
-  </div>
+    </div>
+  </form>
 </ng-template>

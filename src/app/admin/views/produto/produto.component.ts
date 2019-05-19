@@ -12,7 +12,11 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 import { DataTableDirective } from 'angular-datatables';
-import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker/public_api';
+import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { RelatorioService } from 'src/app/services/relatorio.service';
+import { defineLocale } from 'ngx-bootstrap/chronos';
+import { ptBrLocale } from 'ngx-bootstrap/locale';
+defineLocale('pt-br', ptBrLocale); 
 
 @Component({
   selector: 'app-produto',
@@ -64,8 +68,10 @@ export class ProdutoComponent implements OnInit, AfterViewInit {
     private modalService: BsModalService,
     private produtosS: produtoService,
     private categoriaS: CategoriaService,
+    private relatorioS:RelatorioService,
     private spinner: NgxSpinnerService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private localeService: BsLocaleService
   ) { }
 
   ngOnInit() {
@@ -100,7 +106,7 @@ export class ProdutoComponent implements OnInit, AfterViewInit {
     this.datePickerConfig = {
       containerClass: 'theme-default',
       showWeekNumbers: false,
-      adaptivePosition:true,
+      dateInputFormat:'MMMM Do YYYY',
     };
     this.usuarioS.currentUser().subscribe((user: Usuario) => {
       this.usuario = user
@@ -111,7 +117,8 @@ export class ProdutoComponent implements OnInit, AfterViewInit {
       this.categoriaS.getData(user).subscribe((categorias: Categoria[]) => {
         this.categorias = categorias
       })
-    }) 
+    })
+    this.localeService.use('pt-br'); 
   }
   ngAfterViewInit(){
     this.dtTrigger.next()
@@ -135,8 +142,8 @@ export class ProdutoComponent implements OnInit, AfterViewInit {
     this.modalRef = this.modalService.show(template);
   }
   // Abre modal Relatorio
-  openModalRelatorio(relatorio: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(relatorio);
+  openModalRelatorio(search: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(search);
   }
 
   capturarImg(event: Event): void {
@@ -209,7 +216,34 @@ export class ProdutoComponent implements OnInit, AfterViewInit {
   pesquisar(){
     let dateInicio:Date = this.relatorio.value.dateInicio
     let dateFim:Date = this.relatorio.value.dateFim
-    console.log(dateInicio)
-    console.log(dateFim)
+    this.spinner.show()
+    this.relatorioS.search(this.usuario, dateInicio, dateFim).then(
+      (produtos:Produto[])=>{
+        this.spinner.hide()
+        if(produtos.length > 0){
+          Swal.fire({
+            title: `Encontramos ${produtos.length} Produtos Deseja exportar o Relátorio ?`,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Cancelar'
+          }).then(result => {
+            if(result.value){
+              this.relatorioS.generatePdfByMonth(produtos, dateInicio, dateFim).then(()=>{
+                Swal.fire({
+                  title: "Relatorio Exportado com sucesso!",
+                  type: 'success'
+                }).then(()=>{
+                  this.modalRef.hide()
+                  this.relatorio.reset()
+                })
+              })
+            }
+          })
+        }else{
+          this.toastr.error("Não foi Encontrado nem um produto")
+        }
+      }
+    )
   }
 }
