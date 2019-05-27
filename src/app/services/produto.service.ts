@@ -148,7 +148,7 @@ export class produtoService {
   //ativar produto
   activateProduto(usuario:Usuario, produto:Produto){
     return this.af.collection("users").doc(usuario.uid).collection("produto").doc(produto.id).update({
-      esta_ativo:false
+      esta_ativo:true
     })
   }
 

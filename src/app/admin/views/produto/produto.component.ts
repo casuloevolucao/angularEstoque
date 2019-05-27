@@ -165,7 +165,7 @@ export class ProdutoComponent implements OnInit, AfterViewInit {
   }
 
   // Desativar produto
-  desativarProduto(usuario, produto){
+  desativarProduto(produto, usuario){
     Swal.fire({
       title: `Tem certeza que deseja desativar o produto ${produto.nome} ?`,
       type: 'warning',
@@ -180,7 +180,7 @@ export class ProdutoComponent implements OnInit, AfterViewInit {
             type: 'success'
           })
         })
-      }
+      } 
     })
   }
 
