@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { Usuario } from 'src/app/models/usuario.model';
 import { Subject } from 'rxjs';
+import { DataTableDirective } from 'angular-datatables';
 
 @Component({
   selector: 'app-online',
@@ -10,18 +11,19 @@ import { Subject } from 'rxjs';
 })
 export class OnlineComponent implements OnInit {
 
-   //data
-   usuarios:Usuario[] = new Array<Usuario>()
+  //data
+  usuarios:Usuario[] = new Array<Usuario>()
 
-   //option da tabela
-   dtOptions:DataTables.Settings = {}
+  @ViewChild(DataTableDirective)
+  dtElement: DataTableDirective;
+  dtOptions: DataTables.Settings = {}
    
-   //controlado de dados da tabela
-   dtTrigger: Subject<any> = new Subject();
+  //controlado de dados da tabela
+  dtTrigger: Subject<any> = new Subject();
    
-   constructor(
+  constructor(
      private usuarioS:UsuarioService
-   ) { }
+  ) { }
  
    ngOnInit() {
      this.dtOptions = {
@@ -55,12 +57,25 @@ export class OnlineComponent implements OnInit {
      }
      this.usuarioS.getUsersOnline().subscribe((users:Usuario[])=>{
        this.usuarios = users
-       this.dtTrigger.next()
+       this.rerender()
      })
    }
  
-   ngOnDestroy() {
-     this.dtTrigger.unsubscribe();
-   }
+  ngAfterViewInit(){
+    this.dtTrigger.next()
+  }
+
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      // Destrui tabela primeiro
+      dtInstance.destroy();
+      // Chamar o dtTrigger para rerenderizar novamente
+      this.dtTrigger.next();
+    });
+  }
+
+  ngOnDestroy() {
+    this.dtTrigger.unsubscribe();
+  }
  
 }

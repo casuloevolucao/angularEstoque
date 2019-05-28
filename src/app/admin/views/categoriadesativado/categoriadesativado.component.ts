@@ -18,8 +18,6 @@ import Swal from 'sweetalert2';
 })
 export class CategoriadesativadoComponent implements OnInit, AfterViewInit {
 
-  modalRef: BsModalRef;
-
   // Currente User
   usuario: Usuario = new Usuario()
 
@@ -33,8 +31,6 @@ export class CategoriadesativadoComponent implements OnInit, AfterViewInit {
 
   //controlado de dados da tabela
   dtTrigger: Subject<any> = new Subject();
-
-  img: File;
 
   form: FormGroup = new FormGroup({
     "id": new FormControl(null, ),
@@ -107,17 +103,7 @@ export class CategoriadesativadoComponent implements OnInit, AfterViewInit {
     this.dtTrigger.unsubscribe();
   }
 
-  // Abre modal
-  openModal(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template);
-  }
-
-  capturarImg(event: Event): void {
-    this.img = (<HTMLInputElement>event.target).files[0]
-  }
-
   ativar(categoria){
-    console.log(categoria)
     Swal.fire({
       title: `Tem certeza que deseja ativar a Categoria ${categoria.nome} ?`,
       type: 'warning',
@@ -137,34 +123,23 @@ export class CategoriadesativadoComponent implements OnInit, AfterViewInit {
     
   }
 
-  editar(categoria, template: TemplateRef<any>){
-    this.form.patchValue({
-      id:categoria.id,
-      nome:categoria.nome,
-      descricao:categoria.descricao,
-      esta_ativo:categoria.esta_ativo
+  deletar(categoria:Categoria){
+    Swal.fire({
+      title: `Tem certeza que deseja deletar a Categoria ${categoria.nome} ?`,
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sim',
+      cancelButtonText: 'Cancelar'
+    }).then(result => {
+      if(result.value){
+        this.categoriaS.deleteCategoria(this.usuario, categoria).then(()=>{
+          Swal.fire({
+            title: "Categoria deletada com sucesso!",
+            type: 'success'
+          })
+        })
+      }
     })
-    this.openModal(template);
-  }
-
-  submit() {
-    this.spinner.show()
-    let categoria: Categoria = new Categoria(this.form.value)
-    categoria.foto = this.img
-    if(this.form.value.id == null){
-      this.toastr.error("Não foi possivel cadastrar categorias nesta tela, apenas editar.")
-    }else{
-      this.categoriaS.editCategoria(this.usuario, categoria).then(() => {
-        this.spinner.hide()
-        this.toastr.success("Categoria Editada com sucesso!")
-        this.img = null
-        this.form.reset()
-      }).catch((e) => {
-        this.spinner.hide()
-        this.toastr.error("Não foi possivel cadastrar o categoria")
-      })
-    }
-    
   }
 
 }

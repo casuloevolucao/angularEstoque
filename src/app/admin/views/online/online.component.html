@@ -36,7 +36,7 @@
                 <tr *ngFor="let usuario of usuarios;">
                   <td>{{usuario.nome}}</td>
                   <td>{{usuario.email}}</td>
-                  <td>{{usuario.dtCadastro.getDate}}</td>
+                  <td>{{usuario.dtCadastro.toDate() | date:'medium'}}</td>
                   <td><img height="50px" width="50px" [src]="usuario.foto != null ? usuario.foto : '../../../../assets//imgs/user.png'"></td>
                 </tr>
               </tbody>

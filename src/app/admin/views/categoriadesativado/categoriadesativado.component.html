@@ -29,7 +29,7 @@
             <div class="row" style="margin: 20px;">
               <div class="pull-left">
                 <h5>Mais Ações</h5>
-                <a routerLink="/admin/categorias" class="btn btn-success">Categorias habilitadas</a>
+                <a routerLink="/admin/categorias" class="btn btn-success">Categorias Ativadas</a>
               </div>
             </div>
           </div>
@@ -54,7 +54,7 @@
                   </td>
                   <td>{{categoria.dtCadastro.toDate() | date:'medium'}}</td>
                   <td>
-                      <button (click)="editar(categoria, template)" type="button" class="btn btn-primary btn-block btn-flat">Editar</button>
+                      <button (click)="deletar(categoria)" type="button" class="btn btn-danger btn-block btn-flat">Deletar</button>
                       <button (click)="ativar(categoria)" type="button" class="btn btn-success btn-block btn-flat">Ativar</button>
                   </td>
                 </tr>
@@ -72,63 +72,3 @@
   <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-
-<!-- Modal de Cadastro -->
-<ng-template #template>
-  <div class="modal-header">
-    <h4 class="modal-title pull-left">{{form.value.id != null ? 'Editar categoria':'Cadastrar categorias'}}</h4>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide(); form.reset()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <!-- Formulario de Cadastro -->
-    <div class="register-box-body">
-
-      <form [formGroup]="form" (ngSubmit)="submit()">
-        <div class="form-group has-feedback">
-          <input formControlName="nome" type="text" class="form-control" placeholder="Nome do categoria">
-          <span class="fa fa-cubes form-control-feedback"></span>
-          <div *ngIf="form.get('nome').invalid && (form.get('nome').dirty || form.get('nome').touched)"
-            class="alert alert-danger">
-            <div *ngIf="form.get('nome').hasError('required')">
-              O campo é requerido!
-            </div>
-          </div>
-        </div>
-        
-        <div class="form-group has-feedback">
-          <input formControlName="descricao" type="text" class="form-control" placeholder="Descrição">
-          <span class="fa fa-pencil-square form-control-feedback"></span>
-          <div *ngIf="form.get('descricao').invalid && (form.get('descricao').dirty || form.get('descricao').touched)"
-            class="alert alert-danger">
-            <div *ngIf="form.get('descricao').hasError('required')">
-              O campo é requerido!
-            </div>
-          </div>
-        </div>
-
-        <div class="form-group has-feedback">
-            <input formControlName="foto" (change)="capturarImg($event)" type="file" class="form-control" placeholder="Foto do categoria">
-            <span class="fa fa-file-image-o form-control-feedback"></span>
-            <div
-              *ngIf="form.get('foto').invalid && (form.get('foto').dirty || form.get('foto').touched)"
-              class="alert alert-danger">
-              <div *ngIf="form.get('foto').hasError('required')">
-                O campo é requerido!
-              </div>
-            </div>
-          </div>
-        <div class="row">
-          <!-- /.col -->
-          <div class="pull-right">
-            <button type="submit" class="btn btn-primary btn-block btn-flat"
-              [disabled]="!form.valid" (click)="modalRef.hide()">{{form.value.id != null ? 'Editar categoria':'Cadastrar categorias'}}</button>
-          </div>
-          <!-- /.col -->
-        </div>
-      </form>
-    </div>
-    <!-- /.form-box -->
-  </div>
-</ng-template>

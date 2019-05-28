@@ -37,3 +37,11 @@
 .content-wrapper{
     height: 100vh;
 }
+.online{
+    color:green;
+    margin-right: 5px;
+}
+.offline{
+    color:red;
+    margin-right: 5px;
+}
