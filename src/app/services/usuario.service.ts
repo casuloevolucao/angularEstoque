@@ -37,78 +37,63 @@ export class UsuarioService {
   }  
 
   //deletar usuario
-  async desativateUser(){
+  async deleteUser(){
     return this.afa.authState.subscribe((user)=>{
-      user.delete()
-      this.af.collection("users").doc(user.uid).delete()
+      user.delete().then(()=>{
+        this.af.collection("users").doc(user.uid).delete()
+        this.afs.ref(`users/${user.uid}`).delete()
+        localStorage.clear()
+      })
     })
   }
 
   //editar usuario
-  async editUser(usuarioNovo:Usuario, usuarioAntigo:Usuario){
-    //validando se existe foto
-    if(usuarioNovo.foto){
-      //metodo retornara uma promessa personalizada
-      return new Promise ((resolve, reject)=>{
-        //fazendo o upload da imagem
-        this.afs.ref(`users/${usuarioAntigo.uid}`).put(usuarioNovo.foto).then((foto)=>{
-          //pegando url da foto
-          foto.ref.getDownloadURL().then((fotoUrl)=>{
-            //atualizando o perfil de usuario do firebase
-            this.afa.authState.subscribe((user)=>{
-              //fazendo uma retenticação pelo firebase
-              user.reauthenticateWithCredential( firebase.auth.EmailAuthProvider.credential(usuarioAntigo.email, usuarioAntigo.senha))
-              .then(()=>{
-                //atualiza email
-                user.updateEmail(usuarioNovo.email).then(()=>{
-                  //atualizar senha
-                  user.updatePassword(usuarioNovo.senha)
-                  //atualizar base da dados
-                  this.af.collection('users').doc(usuarioAntigo.uid).update({
-                    email: usuarioNovo.email,
-                    foto: fotoUrl,
-                    nome: usuarioNovo.nome
-                  })
-                  //retorno de quando o metodo acabar e der certo
-                  resolve(usuarioNovo)
-                })  
-              })
-              .catch((e)=>{
-                //retorno caso der erro
-                reject(e)
-              })
-            })
-          })
-        })
-      })
-    }else{
-      //metodo retornara uma promessa personalizada
-      return new Promise((resolve, reject)=>{
-        //atualizando o perfil de usuario do firebase
+  //metodo que edita usuario
+  async editUser(usuario:Usuario, senha:string){
+    return new Promise((resolve, reject)=>{
+      if(usuario.foto != null){
         this.afa.authState.subscribe((user)=>{
-          //fazendo uma retenticação pelo firebase
-          user.reauthenticateWithCredential( firebase.auth.EmailAuthProvider.credential(usuarioAntigo.email, usuarioAntigo.senha))
+          user.reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(user.email, senha))
           .then(()=>{
-            //atualiza email
-            user.updateEmail(usuarioNovo.email).then(()=>{
-              //atualizar senha
-              user.updatePassword(usuarioNovo.senha)
-              //atualizar base da dados
-              this.af.collection('users').doc(usuarioAntigo.uid).update({
-                email: usuarioNovo.email,
-                nome: usuarioNovo.nome
+            user.updateEmail(usuario.email)
+              .then(()=>{
+                user.updatePassword(usuario.senha)
+                this.afs.ref(`users/${user.uid}`).put(usuario.foto).then((foto)=>{
+                  foto.ref.getDownloadURL().then((fotoUrl)=>{
+                    this.af.collection("users").doc(user.uid).update({
+                      foto: fotoUrl,
+                      email: usuario.email,
+                      nome: usuario.nome,
+                    })
+                    resolve(user)
+                  })
+                })
               })
-              //retorno de quando o metodo acabar e der certo
-              resolve(usuarioNovo)
-            })  
           })
           .catch((e)=>{
-            //retorno caso der erro
             reject(e)
           })
         })
-      })
-    }
+      }else{
+        this.afa.authState.subscribe((user)=>{
+          user.reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(user.email, senha))
+          .then(()=>{
+            user.updateEmail(usuario.email).then(()=>{
+              user.updatePassword(usuario.senha)
+                this.af.collection("users").doc(user.uid).update({
+                  foto: null,
+                  email: usuario.email,
+                  nome: usuario.nome,
+                })
+              resolve(user)
+            })
+          })
+          .catch((e)=>{
+            reject(e)
+          })
+        })
+      }
+    })
   }
 
   //metodo que pega usuario autenticado

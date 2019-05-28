@@ -30,6 +30,10 @@ export class CategoriaService {
       })
     )
   }
+  //pegar as categorias ativas
+  getCategoriesRegistre(usuario:Usuario){
+    return this.af.collection("users").doc(usuario.uid).collection("categoria").valueChanges()
+  }
   
   //pegar as categorias desativadas
   getDataDisable(usuario:Usuario){
@@ -48,44 +52,65 @@ export class CategoriaService {
 
   //adicionar categorias
   async addCadategoria(usuario:Usuario, categoria:Categoria){
-    if(categoria.foto){
-      return  this.af.collection("users").doc(usuario.uid).collection("categoria").add({
-        nome: categoria.nome,
-        descricao: categoria.descricao,
-        dtCadastro:new Date(),
-        esta_ativo: true
-      })
-      .then((id)=>{
-        this.afs.ref(`categoria/${id.id}`).put(categoria.foto).then((rs)=>{
-          rs.ref.getDownloadURL().then((url)=>{
-            this.af.collection("users").doc(usuario.uid).collection("categoria").doc(id.id).update({
-              foto:url
+    return new Promise((resolve, reject)=>{
+      if(categoria.foto != null){
+        return  this.af.collection("users").doc(usuario.uid).collection("categoria").add({
+          nome: categoria.nome,
+          descricao: categoria.descricao,
+          dtCadastro:new Date(),
+          esta_ativo: true
+        })
+        .then((id)=>{
+          this.afs.ref(`categoria/${id.id}`).put(categoria.foto).then((rs)=>{
+            rs.ref.getDownloadURL().then((url)=>{
+              this.af.collection("users").doc(usuario.uid).collection("categoria").doc(id.id).update({
+                foto:url
+              }).then(()=>{
+                resolve("cadastrou")
+              })
             })
           })
         })
-      })
-    }else{
-      return  this.af.collection("users").doc(usuario.uid).collection("categoria").add({
-        nome: categoria.nome,
-        descricao: categoria.descricao,
-        dtCadastro:new Date(),
-        esta_ativo: true
-      })
-    }
+      }else{
+        return  this.af.collection("users").doc(usuario.uid).collection("categoria").add({
+          nome: categoria.nome,
+          descricao: categoria.descricao,
+          dtCadastro:new Date(),
+          esta_ativo: true
+        }).then(()=>{
+          resolve("cadastrou")
+        })
+      }
+    })
   }
 
   //editar categorias
-  editCategoria(usuario:Usuario, categoria:Categoria){
-    return this.afs.ref(`categoria/${categoria.id}`).put(categoria.foto).then((rs)=>{
-      rs.ref.getDownloadURL().then((url)=>{
-        this.af.collection("users").doc(usuario.uid).collection("categoria").add({
+  async editCategoria(usuario:Usuario, categoria:Categoria){
+    return new Promise((resolve, reject)=>{
+      if(categoria.foto != null){
+        return this.afs.ref(`categoria/${categoria.id}`).put(categoria.foto).then((rs)=>{
+          rs.ref.getDownloadURL().then((url)=>{
+            this.af.collection("users").doc(usuario.uid).collection("categoria").doc(categoria.id).update({
+              nome: categoria.nome,
+              descricao: categoria.descricao,
+              foto: url,
+              esta_ativo:categoria.esta_ativo,
+            }).then(()=>{
+              resolve("atualizado")
+            })
+          })
+        })
+      }else{
+        this.af.collection("users").doc(usuario.uid).collection("categoria").doc(categoria.id).update({
           nome: categoria.nome,
           descricao: categoria.descricao,
-          foto: url,
+          foto: null,
           esta_ativo:categoria.esta_ativo,
-          dtCadastro:new Date()
+        }).then(()=>{
+          this.afs.ref(`categoria/${categoria.id}`).delete()
+          resolve("atualizado")
         })
-      })
+      }
     })
   }
 

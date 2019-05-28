@@ -4,8 +4,6 @@ import { Usuario } from '../models/usuario.model';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Produto } from '../models/produto.model';
-import { UtilsService } from './utils.service';
-import { formatDate } from "@angular/common";
 
 //@Author Ismael Alves
 @Injectable({
@@ -30,12 +28,24 @@ export class RelatorioService {
 		return body;
   }
 
-  async generatePdfByMonth(usuario:Usuario, mesInicio:Date, mesFim:Date){
+  search(usuario:Usuario, mesInicio:Date, mesFim:Date){
     return new Promise((resolve, reject)=>{
-      this.af.collection("users").doc(usuario.uid)
-      .collection("produto", ref => ref.where('esta_ativo', '==', true).where('dtCadastro', '>=', mesInicio).where('dtCadastro', '<=', mesFim).orderBy('dtCadastro'))
-      .valueChanges().subscribe((rs:Produto[])=>{
-        if(rs.length > 0){
+      this.af.collection("users").doc(usuario.uid).collection("produto", ref => ref.where('esta_ativo', '==', true)
+      .where('dtCadastro', '>=', mesInicio)
+      .where('dtCadastro', '<=', mesFim).orderBy('dtCadastro')).valueChanges().subscribe(
+        (rs)=>{
+          console.log(rs)
+        resolve(rs)
+        },
+        (error)=>{
+          reject(error)
+        }
+      )
+    })
+  }
+
+  async generatePdfByMonth(produtos:Produto[], mesInicio:Date, mesFim:Date){
+    return new Promise((resolve, reject)=>{
           pdfMake.vfs = pdfFonts.pdfMake.vfs;
           var pdf = {
             content: [
@@ -48,7 +58,7 @@ export class RelatorioService {
                   // you can declare how many rows should be treated as headers
                   headerRows: 1,
                   widths: [ '*', '*', 'auto', 'auto', 'auto','auto' ],   
-                  body: this.buildTableBody(rs,['Nome', 'Descrição', 'Categoria', 'Quant', 'Valor Ent', 'Valor Sai'])      
+                  body: this.buildTableBody(produtos,['Nome', 'Descrição', 'Categoria', 'Quant', 'Valor Ent', 'Valor Sai'])      
                 }
               }
             ],
@@ -59,12 +69,8 @@ export class RelatorioService {
               }
             }
           };
-          pdfMake.createPdf(pdf).download(`relatorio ${mesInicio.toLocaleDateString('pt')} a ${mesFim.toLocaleDateString('pt')}.pdf`);
-          resolve(rs)
-        }else{
-          reject("Não foi encontrado dados para pesquisar")
-        }
+          //pdfMake.createPdf(pdf).download(`relatorio ${mesInicio.toLocaleDateString('pt')} a ${mesFim.toLocaleDateString('pt')}.pdf`);
+          resolve(pdfMake.createPdf(pdf).download(`relatorio ${mesInicio.toLocaleDateString('pt')} a ${mesFim.toLocaleDateString('pt')}.pdf`))
       })
-    })
   }
 }

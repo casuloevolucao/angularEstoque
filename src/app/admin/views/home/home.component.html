@@ -56,8 +56,62 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-
-  
 <ng-template #normal>
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        Dashboard
+        <small>Painel de Controle</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a routerLink="/admin"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Dashboard</li>
+      </ol>
+    </section>
 
+    <!-- Main content -->
+    <section class="content">
+      <!-- Small boxes (Stat box) -->
+      <div class="row">
+        <div class="col-lg-6 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-aqua">
+            <div class="inner">
+              <h3>{{produtos.length}}</h3>
+
+              <p>Produtos Registrados</p>
+            </div>
+            <div class="icon">
+              <i class="fa fa-cube"></i>
+            </div>
+            <a routerLink="/admin/produtos" class="small-box-footer">Mais informações <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-6 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-yellow">
+            <div class="inner">
+              <h3>{{categorias.length}}</h3>
+
+              <p>Categorias Registradas</p>
+            </div>
+            <div class="icon">
+              <i class="fa fa-list-ul"></i>
+            </div>
+            <a routerLink="/admin/categorias" class="small-box-footer">Mais informações <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+      </div>
+      <!-- /.row -->
+      <!-- Main row -->
+      <div class="row">
+        
+      </div>
+      <!-- /.row (main row) -->
+
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
 </ng-template>

@@ -35,7 +35,9 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
   date:number = Date.now()
 
   //notificação
-  notification:Usuario[]
+  usuariosNotificatio:Usuario[]
+
+  notification:number
 
   @ViewChild('scrollMe') private myScrollContainer: ElementRef;
 
@@ -56,7 +58,13 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
       this.parter = parter[0]
     })
     this.messageS.getUsersMsg().subscribe((usuario:Usuario[])=>{
-      this.notification = usuario
+      this.notification = 0
+      if(this.notification == 0){
+        usuario.forEach((value)=>{
+          this.notification += value.notification
+        })
+      }
+      this.usuariosNotificatio = usuario
     })
     this.scrollToBottom();
   }

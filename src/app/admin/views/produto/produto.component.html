@@ -22,33 +22,33 @@
         <div class="box">
           <div class="box-header">
             <div class="row">
-                <div class="col-12 col-md-8">
-                  <h3 class="box-title">Todos os produtos</h3>
-                </div>
+              <div class="col-12 col-md-8">
+                <h3 class="box-title">Todos os produtos</h3>
+              </div>
             </div>
             <div class="row" style="margin: 20px;">
               <div class="pull-left">
                 <h5>Mais Ações</h5>
                 <a routerLink="/admin/produtosDesativados" class="btn btn-danger">Produtos Desativados</a>
-                <button class="btn btn-secondary">Exportar Relátorio de Produtos</button>
+                <button type="button" class="btn btn-secondary" (click)="openModalRelatorio(search)">Exportar Relátorio de Produtos</button>
               </div>
               <div class="pull-right">
-                <button type="button" class="btn btn-success" (click)="openModal(template)">Cadastrar</button>
+                <button type="button" class="btn btn-success" (click)="openModal(editar)">Cadastrar</button>
               </div>
             </div>
           </div>
           <!-- /.box-header -->
           <div class="box-body">
-            <table class="table table-bordered table-hover" datatable [dtTrigger]="dtTrigger" [dtOptions]="dtOptions">
+            <table class="table table-bordered table-hover" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
               <thead>
-                <tr>
-                  <th>Id</th>
+                <tr> 
                   <th>Categoria</th>
                   <th>Nome</th>
                   <th>Quantidade</th>
-                  <th>Descrição</th>
-                  <th>Foto</th>
                   <th>Estado</th>
+                  <th>Descrição</th>
+                  <th>Dt Cadastro</th>
+                  <th>Foto</th>
                   <th>Valor de entrada</th>
                   <th>Valor de saída</th>
                   <th>Ação</th>
@@ -56,17 +56,29 @@
               </thead>
               <tbody>
                 <tr *ngFor="let produto of produtos;">
-                  <td>{{produto.id}}</td>
                   <td>{{produto.categoria}}</td>
                   <td>{{produto.nome}}</td>
                   <td>{{produto.quantidade}}</td>
+                  <td>
+                  <span 
+                  [class]="produto.quantidade >=6 && produto.quantidade <= 10 ? 'description-percentage text-orange': 
+                  produto.quantidade == 0  ? 'description-percentage text-red':'description-percentage text-green'
+                    "><i [class]="produto.quantidade >=6 && produto.quantidade <= 10 ? 'fa fa-caret-left': 
+                      produto.quantidade == 0  ? 'fa fa-caret-down':'fa fa-caret-up'">
+                    </i> {{produto.quantidade == 0 ? 'Fora de estoque':
+                        produto.quantidade >= 6 && produto.quantidade <=10 ? 'Normal':'Aceitável'}}</span>
+                    
+                  </td>
                   <td>{{produto.descricao}}</td>
-                  <td><img height="50px" width="50px" 
-                    [src]="produto.foto != null ? produto.foto : '../../../../assets//imgs/product.png'"></td>
-                  <td>{{produto.esta_ativo}}</td>
+                  <td>{{produto.dtCadastro.toDate() | date:'medium'}}</td>
+                  <td><img height="50px" width="50px"
+                      [src]="produto.foto != null ? produto.foto :'../../../../assets/imgs/product.png'"></td>
                   <td>{{produto.valorEntrada}}</td>
                   <td>{{produto.valorSaida}}</td>
-                  <!-- <td>{{produto.}}</td> -->
+                  <td>
+                    <button type="button" class="btn btn-primary btn-block btn-flat"(click)="editarProduto(produto, editar)">Editar</button>
+                    <button type="button" class="btn btn-danger btn-block btn-flat" (click)="desativarProduto(produto, usuario)">Desativar</button>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -84,10 +96,10 @@
 <!-- /.content-wrapper -->
 
 <!-- Modal de Cadastro -->
-<ng-template #template>
+<ng-template #editar>
   <div class="modal-header">
-    <h4 class="modal-title pull-left">Cadastrar produtos</h4>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+    <h4 class="modal-title pull-left"> {{form.value.id != null ? 'Editar produto':'Cadastrar produtos'}}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide(); form.reset()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -97,7 +109,8 @@
 
       <form [formGroup]="form" (ngSubmit)="submit()">
         <div class="form-group has-feedback">
-          <input formControlName="nome" type="text" class="form-control" placeholder="Nome do produto">
+          <label for="nome">Nome do produto</label>
+          <input formControlName="nome" type="text" class= "form-control">
           <span class="fa fa-cubes form-control-feedback"></span>
           <div *ngIf="form.get('nome').invalid && (form.get('nome').dirty || form.get('nome').touched)"
             class="alert alert-danger">
@@ -107,7 +120,8 @@
           </div>
         </div>
         <div class="form-group has-feedback">
-          <input formControlName="quantidade" type="number" class="form-control" placeholder="Quantidade">
+          <label for="quantidade">Quantidade</label>
+          <input formControlName="quantidade" type="number" class="form-control">
           <span class="fa fa-plus-square form-control-feedback"></span>
           <div
             *ngIf="form.get('quantidade').invalid && (form.get('quantidade').dirty || form.get('quantidade').touched)"
@@ -118,7 +132,8 @@
           </div>
         </div>
         <div class="form-group has-feedback">
-          <input formControlName="descricao" type="text" class="form-control" placeholder="Descrição">
+          <label for="descricao">Descrição</label>
+          <input formControlName="descricao" type="text" class="form-control">
           <span class="fa fa-pencil-square form-control-feedback"></span>
           <div *ngIf="form.get('descricao').invalid && (form.get('descricao').dirty || form.get('descricao').touched)"
             class="alert alert-danger">
@@ -128,6 +143,7 @@
           </div>
         </div>
         <div class="form-group has-feedback">
+          <label for="categoria">Categoria</label>
           <select formControlName="categoria" class="form-control">
             <option>Selecione</option>
             <option *ngFor="let categoria of categorias" [value]="categoria.nome">{{categoria.nome}}</option>
@@ -139,21 +155,20 @@
             </div>
           </div>
         </div>
-
         <div class="form-group has-feedback">
-            <input formControlName="foto" (change)="capturarImg($event)" type="file" class="form-control" placeholder="Foto do produto">
-            <span class="fa fa-file-image-o form-control-feedback"></span>
-            <div
-              *ngIf="form.get('foto').invalid && (form.get('foto').dirty || form.get('foto').touched)"
-              class="alert alert-danger">
-              <div *ngIf="form.get('foto').hasError('required')">
-                O campo é requerido!
-              </div>
+          <label for="foto">Foto do produto</label>
+          <input formControlName="foto" (change)="capturarImg($event)" type="file" class="form-control">
+          <span class="fa fa-file-image-o form-control-feedback"></span>
+          <div *ngIf="form.get('foto').invalid && (form.get('foto').dirty || form.get('foto').touched)"
+            class="alert alert-danger">
+            <div *ngIf="form.get('foto').hasError('required')">
+              O campo é requerido!
             </div>
           </div>
-
+        </div>
         <div class="form-group has-feedback">
-          <input formControlName="valorEntrada" type="number" class="form-control" placeholder="Valor de entrada">
+          <label for="valorEntrada">Valor de entrada</label>
+          <input formControlName="valorEntrada" type="number" class="form-control">
           <span class="fa fa-money form-control-feedback"></span>
           <div
             *ngIf="form.get('valorEntrada').invalid && (form.get('valorEntrada').dirty || form.get('valorEntrada').touched)"
@@ -164,7 +179,8 @@
           </div>
         </div>
         <div class="form-group has-feedback">
-          <input formControlName="valorSaida" type="number" class="form-control" placeholder="Valor de saída">
+          <label for="valorSaida">Valor de saída</label>
+          <input formControlName="valorSaida" type="number" class="form-control">
           <span class="fa fa-money form-control-feedback"></span>
           <div
             *ngIf="form.get('valorSaida').invalid && (form.get('valorSaida').dirty || form.get('valorSaida').touched)"
@@ -177,8 +193,8 @@
         <div class="row">
           <!-- /.col -->
           <div class="pull-right">
-            <button type="submit" class="btn btn-primary btn-block btn-flat"
-              [disabled]="!form.valid" (click)="modalRef.hide()">Cadastrar produto</button>
+            <button type="submit" class="btn btn-primary btn-block btn-flat" [disabled]="!form.valid"
+              (click)="modalRef.hide()">{{form.value.id != null ? 'Editar produto':'Cadastrar produtos'}}</button>
           </div>
           <!-- /.col -->
         </div>
@@ -186,4 +202,57 @@
     </div>
     <!-- /.form-box -->
   </div>
+</ng-template>
+
+<ng-template #search>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left"> Exportar Relátorio por Data de Cadastro</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide();">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form [formGroup]="relatorio" (ngSubmit)="pesquisar()">
+    <div class="modal-body">
+      <div class="form-group has-feedback">
+        <label>Data Inicio</label>
+        <input 
+          type="text"
+          class="form-control"
+          autocomplete="off"
+          bsDatepicker
+          formControlName="dateInicio"
+          [bsConfig]="datePickerConfig">
+          <div
+            *ngIf="relatorio.get('dateInicio').invalid && (relatorio.get('dateInicio').dirty || relatorio.get('dateInicio').touched)"
+            class="alert alert-danger">
+            <div *ngIf="relatorio.get('dateInicio').hasError('required')">
+              O campo é requerido!
+            </div>
+          </div>
+      </div>
+      <div class="form-group has-feedback">
+        <label>Data Fim</label>
+        <input type="text"
+          class="form-control"
+          autocomplete="off"
+          bsDatepicker
+          formControlName="dateFim"
+          [bsConfig]="datePickerConfig">
+          <div
+            *ngIf="relatorio.get('dateFim').invalid && (relatorio.get('dateFim').dirty || relatorio.get('dateFim').touched)"
+            class="alert alert-danger">
+            <div *ngIf="relatorio.get('dateFim').hasError('required')">
+              O campo é requerido!
+            </div>
+          </div>
+      </div> 
+    </div>
+    <div class="modal-footer">
+      <div class="pull-right">
+        <button type="submit" class="btn btn-primary btn-block btn-flat" [disabled]="!relatorio.valid">
+          Pesquisar..
+        </button>
+      </div>
+    </div>
+  </form>
 </ng-template>
