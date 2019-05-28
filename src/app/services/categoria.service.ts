@@ -130,7 +130,7 @@ export class CategoriaService {
 
   //ativar categoria
   activateCategoria(usuario:Usuario, categoria:Categoria){
-    return this.af.collection("users").doc(usuario.uid).collection("user").doc(categoria.id).update({
+    return this.af.collection("users").doc(usuario.uid).collection("categoria").doc(categoria.id).update({
       esta_ativo:true
     })
   }
