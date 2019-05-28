@@ -4,7 +4,7 @@
     bottom: 0;
     float: right;
     position: absolute;
-    z-index: 999;
+    z-index: 11;
 }
 .direct-chat-messages{
     height: auto;

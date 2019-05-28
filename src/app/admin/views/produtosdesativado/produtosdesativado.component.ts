@@ -1,35 +1,24 @@
-import { Component, OnInit, ViewChild, AfterViewInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Usuario } from 'src/app/models/usuario.model';
 import { Produto } from 'src/app/models/produto.model';
-import { Categoria } from 'src/app/models/categoria.model';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { produtoService } from 'src/app/services/produto.service';
-import { CategoriaService } from 'src/app/services/categoria.service';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastrService } from 'ngx-toastr';
-import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
 import Swal from 'sweetalert2';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { RelatorioService } from 'src/app/services/relatorio.service';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-produtosdesativado',
   templateUrl: './produtosdesativado.component.html',
   styleUrls: ['./produtosdesativado.component.css']
 })
-export class ProdutosdesativadoComponent implements OnInit, AfterViewInit {
-
-  modalRef: BsModalRef;
+export class ProdutosdesativadoComponent implements OnInit {
 
   // Currente User
   usuario: Usuario = new Usuario()
 
   //data
   produtos: Produto[] = new Array<Produto>()
-  categorias: Categoria[] = new Array<Categoria>()
 
   //option da tabela
   @ViewChild(DataTableDirective)
@@ -39,24 +28,9 @@ export class ProdutosdesativadoComponent implements OnInit, AfterViewInit {
   //controlado de dados da tabela
   dtTrigger: Subject<any> = new Subject();
 
-  img: File;
-
-  relatorio:FormGroup = new FormGroup({
-    "dateInicio": new FormControl(null, [Validators.required]),
-    "dateFim": new FormControl(null, [Validators.required])
-  })
-
-  datePickerConfig: Partial<BsDatepickerConfig>;
-
   constructor(
     private usuarioS: UsuarioService,
     private produtosS: produtoService,
-    private categoriaS: CategoriaService,
-    private spinner: NgxSpinnerService,
-    private toastr: ToastrService,
-    private localeService: BsLocaleService,
-    private relatorioS:RelatorioService,
-    private modalService: BsModalService,
   ) { }
 
   ngOnInit() {
@@ -88,22 +62,14 @@ export class ProdutosdesativadoComponent implements OnInit, AfterViewInit {
       pageLength: 5,
       processing: true
     }
-    this.datePickerConfig = {
-      containerClass: 'theme-default',
-      showWeekNumbers: false,
-      dateInputFormat:'MMMM Do YYYY',
-    };
+    
     this.usuarioS.currentUser().subscribe((user: Usuario) => {
       this.usuario = user
       this.produtosS.getDataDisable(user).subscribe((produtos: Produto[]) => {
         this.produtos = produtos
         this.rerender()
       })
-      this.categoriaS.getData(user).subscribe((categorias: Categoria[]) => {
-        this.categorias = categorias
-      })
     })
-    this.localeService.use('pt-br'); 
   }
 
   ngAfterViewInit(){
@@ -123,18 +89,9 @@ export class ProdutosdesativadoComponent implements OnInit, AfterViewInit {
     this.dtTrigger.unsubscribe();
   }
 
-    // Abre modal
-    openModal(template: TemplateRef<any>) {
-      this.modalRef = this.modalService.show(template);
-    }
-    // Abre modal Relatorio
-    openModalRelatorio(search: TemplateRef<any>) {
-      this.modalRef = this.modalService.show(search);
-    }
-
   ativar(produto, usuario){
     Swal.fire({
-      title: `Tem certeza que ativar o produto ${produto.nome} ?`,
+      title: `Tem certeza que deseja ativar o produto ${produto.nome} ?`,
       type: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sim',
@@ -153,7 +110,7 @@ export class ProdutosdesativadoComponent implements OnInit, AfterViewInit {
 
   deletar(produto, usuario){
     Swal.fire({
-      title: `Tem certeza que deletar o produto ${produto.nome} ?`,
+      title: `Tem certeza que deseja deletar o produto ${produto.nome} ?`,
       type: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sim',
@@ -168,41 +125,6 @@ export class ProdutosdesativadoComponent implements OnInit, AfterViewInit {
         })
       }
     })
-  }
-
-  //pequisar 
-  pesquisar(){
-    let dateInicio:Date = this.relatorio.value.dateInicio
-    let dateFim:Date = this.relatorio.value.dateFim
-    this.spinner.show()
-    this.relatorioS.search(this.usuario, dateInicio, dateFim).then(
-      (produtos:Produto[])=>{
-        this.spinner.hide()
-        if(produtos.length > 0){
-          Swal.fire({
-            title: `Encontramos ${produtos.length} Produtos Deseja exportar o Relátorio ?`,
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Sim',
-            cancelButtonText: 'Cancelar'
-          }).then(result => {
-            if(result.value){
-              this.relatorioS.generatePdfByMonth(produtos, dateInicio, dateFim).then(()=>{
-                Swal.fire({
-                  title: "Relatorio Exportado com sucesso!",
-                  type: 'success'
-                }).then(()=>{
-                  this.modalRef.hide()
-                  this.relatorio.reset()
-                })
-              })
-            }
-          })
-        }else{
-          this.toastr.error("Não foi Encontrado nem um produto")
-        }
-      }
-    )
   }
 
 }
