@@ -43,7 +43,7 @@
     "jquery-sparkline": "^2.4.0",
     "jquery.dataTables.min.js": "^1.10.5",
     "jqueryui": "^1.11.1",
-    "jspdf": "^1.5.3",
+    "jspdf": "^2.3.1",
     "jszip": "^3.2.1",
     "moment": "^2.24.0",
     "morris.js": "^0.5.0",
